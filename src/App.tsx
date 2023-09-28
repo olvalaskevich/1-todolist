@@ -1,39 +1,28 @@
 import React from 'react';
 import './App.css';
+import {Todolist} from "./Todolist";
 
+const tasks1=[
+    {id:0, title:'HTML&CSS', isDone:true},
+    {id:1, title:'JS', isDone:true},
+    {id:2, title:'React', isDone:false},
+]
+
+const tasks2=[
+    {id:0, title:'Hello World', isDone:true},
+    {id:1, title:'I am Happy', isDone:true},
+    {id:2, title:'Yo', isDone:false},
+]
 function App() {
     return (
         <div className="App">
-            <Todolist/>
-            <Todolist/>
-            <Todolist/>
+            <Todolist title='What to learn' tasks={tasks1}/>
+            <Todolist title='Songs' tasks={tasks2}/>
         </div>
     );
 }
 
 
-
-const Todolist = () => {
-    return (
-        <div>
-            <h3>What to learn</h3>
-            <div>
-                <input/>
-                <button>+</button>
-            </div>
-            <ul>
-                <li><input type="checkbox" checked={true}/> <span>HTML&CSS</span></li>
-                <li><input type="checkbox" checked={true}/> <span>JS</span></li>
-                <li><input type="checkbox" checked={false}/> <span>React</span></li>
-            </ul>
-            <div>
-                <button>All</button>
-                <button>Active</button>
-                <button>Completed</button>
-            </div>
-        </div>
-    );
-};
 
 export default App;
 
