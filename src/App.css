@@ -6,3 +6,18 @@
 .App > div {
   margin-right: 50px;
 }
+
+.error{
+  border: 2px solid red;
+}
+.textError{
+  color: red;
+}
+
+.button{
+  background-color: aqua;
+}
+
+.done{
+  opacity: 0.5;
+}
