@@ -24,13 +24,14 @@ export const Todolist = (props:TodolistPropsType) => {
         }
 
         const onClickBtnHandler=()=>{
-            props.addTask(newTaskTitle)
+            if (newTaskTitle.trim()!=='')
+            props.addTask(newTaskTitle.trim())
             setNewTaskTitle('')
         }
 
         const onKeyEnter=(event:KeyboardEvent<HTMLInputElement>)=>{
-            if (event.key==='Enter'){
-            props.addTask(newTaskTitle)
+            if (event.key==='Enter'&& newTaskTitle.trim()!==''){
+            props.addTask(newTaskTitle.trim())
             setNewTaskTitle('')
             }
         }
