@@ -7,8 +7,8 @@ export type FilterType='all' | 'active' | 'completed'
 
 function App() {
     let [tasks,setTasks]=useState([
-        {id:v1(), title:'HTML&CSS', isDone:true},
-        {id:v1(), title:'JS', isDone:true},
+        {id:v1(), title:'HTML&CSS', isDone:false},
+        {id:v1(), title:'JS', isDone:false},
         {id:v1(), title:'React', isDone:false},
         {id:v1(), title:'Redux', isDone:false},
     ]);
@@ -31,6 +31,11 @@ function App() {
    function changeFilter(value:FilterType){
         setFilter(value);
     }
+    function changeChacked(idChecked:string, isDone:boolean){
+        let taskChecked=tasks.find(t=>t.id===idChecked)
+        if (taskChecked) {taskChecked.isDone=isDone}
+            setTasks([...tasks])
+    }
 
     let tasksForTodolist=tasks;
     if (filter==='completed'){
@@ -44,7 +49,7 @@ function App() {
     return (
         <div className="App">
             <Todolist title='What to learn' tasks={tasksForTodolist} removeTask={removeTask} changeFilter={changeFilter}
-                      addTask={addTask}/>
+                      addTask={addTask} changeChacked={changeChacked}/>
         </div>
     );
 }
