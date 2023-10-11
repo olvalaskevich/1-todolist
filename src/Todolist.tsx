@@ -1,5 +1,6 @@
 import React, {useState, ChangeEvent, KeyboardEvent} from "react";
 import {FilterType} from "./App";
+import './App.css'
 
 type TaskType={
     id:string,
@@ -12,21 +13,28 @@ type TodolistPropsType={
     tasks:Array<TaskType>,
     removeTask:(id:string)=>void,
     changeFilter:(value:FilterType)=>void,
-    addTask:(title:string)=>void
-    changeChacked:(idChecked:string, isDone:boolean)=>void
+    addTask:(title:string)=>void,
+    changeChacked:(idChecked:string, isDone:boolean)=>void,
+    filter:FilterType
 }
 
 export const Todolist = (props:TodolistPropsType) => {
 
         let [newTaskTitle, setNewTaskTitle]=useState('')
+
+        let [error, setError]=useState<string|null>(null)
+
+
         const onChangeInputHandler=(event:ChangeEvent<HTMLInputElement>)=>{
             setNewTaskTitle(event.currentTarget.value)
+            setError(null)
         }
 
         const onClickBtnHandler=()=>{
-            if (newTaskTitle.trim()!=='')
+            if (newTaskTitle.trim()!==''){
             props.addTask(newTaskTitle.trim())
-            setNewTaskTitle('')
+            setNewTaskTitle('')}
+            else {setError("Invalid value")}
         }
 
         const onKeyEnter=(event:KeyboardEvent<HTMLInputElement>)=>{
@@ -34,10 +42,12 @@ export const Todolist = (props:TodolistPropsType) => {
             props.addTask(newTaskTitle.trim())
             setNewTaskTitle('')
             }
+            else {setError("Invalid value")}
         }
 
         const onChangeAllFilter = () => {
         props.changeFilter('all')
+
         }
 
         const onChangeActiveFilter = () => {
@@ -53,8 +63,9 @@ export const Todolist = (props:TodolistPropsType) => {
         <div>
             <h3>{props.title}</h3>
             <div>
-                <input onKeyPress={onKeyEnter} onChange={onChangeInputHandler} value={newTaskTitle}/>
+                <input className={error? 'error':''}  onKeyPress={onKeyEnter} onChange={onChangeInputHandler} value={newTaskTitle}/>
                 <button onClick={onClickBtnHandler}>+</button>
+                {error && <div className={'textError'}>Invalid value</div>}
             </div>
             <ul>
                 {props.tasks.map((s)=>{
@@ -67,17 +78,17 @@ export const Todolist = (props:TodolistPropsType) => {
                         props.changeChacked(s.id,event.currentTarget.checked)
                     }
 
-                    return <li key={s.id}>
-                        <input onChange={changeChackedHandler} type="checkbox"/>
+                    return <li className={s.isDone ?'done':''} key={s.id}>
+                        <input onChange={changeChackedHandler} type="checkbox" checked={s.isDone}/>
                         <span>{s.title}</span>
                         <button onClick={removeTaskHandler}>x</button>
                     </li>
                 })}
             </ul>
             <div>
-                <button onClick={onChangeAllFilter}>All</button>
-                <button onClick={onChangeActiveFilter}>Active</button>
-                <button onClick={onChangeCompletedFilter}>Completed</button>
+                <button className={props.filter==='all' ? 'button':''} onClick={onChangeAllFilter}>All</button>
+                <button className={props.filter==='active' ? 'button':''} onClick={onChangeActiveFilter}>Active</button>
+                <button className={props.filter==='completed' ? 'button':''} onClick={onChangeCompletedFilter}>Completed</button>
             </div>
         </div>
     );
