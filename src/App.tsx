@@ -13,6 +13,13 @@ function App() {
         {id:v1(), title:'Redux', isDone:false},
     ]);
 
+
+
+    let [todolist, setToDoList]=useState({
+        [todolistName]:{id:v1(), title:'What to bye'},
+        [v1()]:{id:v1(), title:'What to bye'}
+    })
+
     console.log(tasks)
 
     let [filter, setFilter]=useState<FilterType>('all');
