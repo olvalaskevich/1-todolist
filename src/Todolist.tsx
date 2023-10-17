@@ -19,6 +19,7 @@ type TodolistPropsType={
     changeChacked:(idChecked:string, isDone:boolean, tdId:string)=>void,
     filter:FilterType,
     id:string
+    deleteTodolist:(tdId:string)=>void
 }
 
 export const Todolist = (props:TodolistPropsType) => {
@@ -61,10 +62,14 @@ export const Todolist = (props:TodolistPropsType) => {
         props.changeFilter('completed', props.id)
         }
 
+        const onDeleteHandler=()=>{
+            props.deleteTodolist(props.id)
+        }
+
 
     return (
         <div>
-            <h3>{props.title}</h3>
+            <h3>{props.title}<button onClick={onDeleteHandler}>x</button></h3>
             <div>
                 <input className={error? 'error':''}  onKeyPress={onKeyEnter} onChange={onChangeInputHandler} value={newTaskTitle}/>
                 <button onClick={onClickBtnHandler}>+</button>

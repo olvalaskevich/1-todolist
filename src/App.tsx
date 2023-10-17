@@ -61,6 +61,11 @@ function App() {
         setToDoList([...todolists])
     }
 
+    function deleteTodolist (tdId:string){
+        let delList=todolists.filter(t=>t.id!==tdId)
+        setToDoList(delList)
+    }
+
 
     return (
         <div className="App">
@@ -83,7 +88,8 @@ function App() {
                                  changeFilter={changeFilter}
                                  addTask={addTask}
                                  changeChacked={changeChacked}
-                                 filter={t.filter}/>
+                                 filter={t.filter}
+                                 deleteTodolist={deleteTodolist}/>
             })}
 
         </div>
