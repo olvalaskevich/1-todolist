@@ -8,14 +8,17 @@ type TaskType={
     isDone:boolean
 }
 
+
+
 type TodolistPropsType={
     title:string,
     tasks:Array<TaskType>,
-    removeTask:(id:string)=>void,
-    changeFilter:(value:FilterType)=>void,
-    addTask:(title:string)=>void,
-    changeChacked:(idChecked:string, isDone:boolean)=>void,
-    filter:FilterType
+    removeTask:(id:string, tdId:string)=>void,
+    changeFilter:(value:FilterType, id:string)=>void,
+    addTask:(title:string, id:string)=>void,
+    changeChacked:(idChecked:string, isDone:boolean, tdId:string)=>void,
+    filter:FilterType,
+    id:string
 }
 
 export const Todolist = (props:TodolistPropsType) => {
@@ -32,30 +35,30 @@ export const Todolist = (props:TodolistPropsType) => {
 
         const onClickBtnHandler=()=>{
             if (newTaskTitle.trim()!==''){
-            props.addTask(newTaskTitle.trim())
+            props.addTask(newTaskTitle.trim(), props.id)
             setNewTaskTitle('')}
             else {setError("Invalid value")}
         }
 
         const onKeyEnter=(event:KeyboardEvent<HTMLInputElement>)=>{
             if (event.key==='Enter'&& newTaskTitle.trim()!==''){
-            props.addTask(newTaskTitle.trim())
+            props.addTask(newTaskTitle.trim(), props.id)
             setNewTaskTitle('')
             }
             else {setError("Invalid value")}
         }
 
         const onChangeAllFilter = () => {
-        props.changeFilter('all')
+        props.changeFilter('all', props.id)
 
         }
 
         const onChangeActiveFilter = () => {
-        props.changeFilter('active')
+        props.changeFilter('active', props.id)
         }
 
         const onChangeCompletedFilter = () => {
-        props.changeFilter('completed')
+        props.changeFilter('completed', props.id)
         }
 
 
@@ -71,11 +74,11 @@ export const Todolist = (props:TodolistPropsType) => {
                 {props.tasks.map((s)=>{
 
                     const removeTaskHandler=()=>{
-                        props.removeTask(s.id)
+                        props.removeTask(s.id, props.id)
                     }
 
                     const changeChackedHandler=(event:ChangeEvent<HTMLInputElement>)=>{
-                        props.changeChacked(s.id,event.currentTarget.checked)
+                        props.changeChacked(s.id,event.currentTarget.checked, props.id)
                     }
 
                     return <li className={s.isDone ?'done':''} key={s.id}>
