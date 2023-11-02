@@ -1,21 +1,13 @@
-.App {
-  padding: 30px;
-  display: flex;
+li{
+  list-style: none;
 }
 
-.App > div {
-  margin-right: 50px;
-}
 
 .error{
   border: 2px solid red;
 }
 .textError{
   color: red;
-}
-
-.button{
-  background-color: aqua;
 }
 
 .done{
