@@ -13,7 +13,7 @@ export type TodoListTitleType={
     filter:FilterType
 }
 
-type TodolistTasksType={
+export type TodolistTasksType={
     [key:string]:Array<TaskType>
 }
 
@@ -53,12 +53,21 @@ function App() {
         setTasks({...tasks, [tdId]:[newTask, ...tasks[tdId]]})
     }
 
-
     function changeChacked(idChecked:string, isDone:boolean, tdId:string){
         let taskChecked=tasks[tdId].find(t=>t.id===idChecked)
         if (taskChecked) {taskChecked.isDone=isDone}
             setTasks({...tasks})
     }
+    function changeEditSpan(value:string, id:string, idTd:string){
+
+        let changeToDoTask=[...tasks[idTd]];
+        let changeTask=changeToDoTask.find((t)=>t.id===id);
+        if (changeTask)
+            changeTask.title=value
+        setTasks({...tasks})
+    }
+
+
 
     function changeFilter(value:FilterType, id:string){
         let currentTodolist=todolists.find(td=>td.id===id)
@@ -69,6 +78,8 @@ function App() {
     function deleteTodolist (tdId:string){
         let delList=todolists.filter(t=>t.id!==tdId)
         setToDoList(delList)
+        delete tasks[tdId]
+        setTasks({...tasks})
     }
 
     function addItem(item:string){
@@ -77,16 +88,6 @@ function App() {
         setToDoList([newToDoList, ...todolists])
         setTasks({[newTodolistId]:[],...tasks })
     }
-
-    function changeEditSpan(value:string, id:string, idTd:string){
-
-        let changeToDoTask=[...tasks[idTd]];
-        let changeTask=changeToDoTask.find((t)=>t.id===id);
-        if (changeTask)
-        changeTask.title=value
-        setTasks({...tasks})
-    }
-
     function changeToDoListEditSpan(value:string, idTd:string){
 
         let changeToDoList=todolists.find((t)=>t.id===idTd);
