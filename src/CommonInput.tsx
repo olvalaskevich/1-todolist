@@ -8,12 +8,16 @@ type CommonInputPropsType={
 }
 
 
-export const CommonInput = (props:CommonInputPropsType) => {
+export const CommonInput = React.memo( (props:CommonInputPropsType) => {
+
+
     let [newTaskTitle, setNewTaskTitle]=useState('')
     let [error, setError]=useState<string|null>(null)
     const onChangeInputHandler=(event:ChangeEvent<HTMLInputElement>)=>{
         setNewTaskTitle(event.currentTarget.value)
+        if (error!==null)
         setError(null)
+
     }
 
     const onClickBtnHandler=()=>{
@@ -24,11 +28,14 @@ export const CommonInput = (props:CommonInputPropsType) => {
     }
 
     const onKeyEnter=(event:KeyboardEvent<HTMLInputElement>)=>{
+
         if (event.key==='Enter'&& newTaskTitle.trim()!==''){
             props.addItem(newTaskTitle.trim())
             setNewTaskTitle('')
         }
-        else {setError("Invalid value")}
+        if (event.key==='Enter'&& newTaskTitle.trim()==='') {
+            setError("Invalid value")
+        }
     }
 
 
@@ -48,5 +55,5 @@ export const CommonInput = (props:CommonInputPropsType) => {
             {error && <div className={'textError'}>Invalid value</div>}
         </div>
     );
-};
+});
 

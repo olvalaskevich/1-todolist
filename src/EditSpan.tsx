@@ -8,7 +8,8 @@ type EditSpanPropsType={
 
 
 
-export const EditSpan = (props:EditSpanPropsType) => {
+export const EditSpan = React.memo( (props:EditSpanPropsType) => {
+    console.log('hello')
 
     let [onDouble, setonDouble]=useState(false)
     let [value, setValue]=useState('')
@@ -36,5 +37,5 @@ export const EditSpan = (props:EditSpanPropsType) => {
             }
         </>
     );
-};
+});
 
