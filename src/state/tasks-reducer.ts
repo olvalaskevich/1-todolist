@@ -2,6 +2,7 @@ import {TodolistTasksType} from "../App";
 import {v1} from "uuid";
 import {AddTODOLISTActionType, RemoveTODOLISTActionType} from "./todolists-reducer";
 
+
 type RemoveTaskTypeAction={
     type:'Remove task',
     tdId:string,
@@ -42,10 +43,11 @@ export const tasksReducer=(state:TodolistTasksType=initialState, action:TasksRed
             return {...state, [action.tdId]:[{id:v1(),title:action.title, isDone:false}, ...state[action.tdId]]}
 
         case 'Change checked':{
-            let copyState={...state}
-            let taskChecked=copyState[action.tdId].find(t=>t.id===action.idChecked)
-            if (taskChecked) {taskChecked.isDone=action.isDone}
-            return copyState
+
+            let taskChecked=state[action.tdId];
+            state[action.tdId]=taskChecked.map(t=>t.id===action.idChecked? {...t, isDone:action.isDone} : t);
+
+            return {...state}
             }
 
         case 'Change title of task':{
