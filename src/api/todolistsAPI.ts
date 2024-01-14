@@ -26,6 +26,7 @@ type ResponseType<T={}>={
 export type TasksType={
     description: string
     title: string
+    completed:boolean
     status: number
     priority: number
     startDate: string
@@ -54,7 +55,7 @@ type UpdateTasksType={
 
 
 
-export const TodolistsAPI={
+export const todolistsAPI={
 
     // TODOLISTS
 
