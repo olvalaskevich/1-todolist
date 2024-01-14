@@ -1,22 +1,24 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import './App.css';
-import {TaskType, Todolist} from "./Todolist";
+import {Todolist} from "./Todolist";
 import {CommonInput} from "./CommonInput";
 import {AppBar, Box, Button, Container, Grid, IconButton, Paper, Toolbar, Typography} from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootState} from "./state/store";
-import {AddTdAC, ChangeTitleTdAC, RemoveTdAC} from "./state/todolists-reducer";
+import {AddTdAC, CreateTodolistsTC, GetTodolistsTC} from "./state/todolists-reducer";
+import {TasksType} from "./api/todolistsAPI";
 
 export type FilterType='all' | 'active' | 'completed'
 export type TodoListTitleType={
     id:string,
     title:string,
-    filter:FilterType
-}
+    addedDate: string
+    order: number
+} & {filter:FilterType}
 
 export type TodolistTasksType={
-    [key:string]:Array<TaskType>
+    [key:string]:Array<TasksType>
 }
 
 function App() {
@@ -26,11 +28,15 @@ function App() {
     let todolists=useSelector<AppRootState, Array<TodoListTitleType>>((state)=>state.todolists)
 
 
+
     const addItem=useCallback((item:string)=>{
-        let action=AddTdAC(item)
-        dispatch(action)
+        // let action=AddTdAC(item)
+        dispatch(CreateTodolistsTC(item) as any)
     }, [dispatch])
 
+    useEffect(()=>{
+        dispatch(GetTodolistsTC() as any)
+    },[])
 
 
 
