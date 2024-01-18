@@ -26,7 +26,6 @@ type ResponseType<T={}>={
 export type TasksType={
     description: string
     title: string
-    completed:boolean
     status: number
     priority: number
     startDate: string
@@ -46,7 +45,6 @@ type ResponseTasksType={
 type UpdateTasksType={
     title: string
     description: string
-    completed: boolean
     status: number
     priority: number
     startDate: string
