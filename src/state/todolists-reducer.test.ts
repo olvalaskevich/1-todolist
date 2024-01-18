@@ -38,7 +38,8 @@ test('todolist should be added', ()=>{
             order: 0}
     ]
 
-    const endState=todolistReducer(todolists, AddTdAC('What to add'))
+    const endState=todolistReducer(todolists, AddTdAC({id:todolistId1, title:'What to learn', addedDate: 'string',
+        order: 0}))
     if (endState){
     expect(endState.length).toBe(3)
     expect(endState[2].title).toBe('What to add')
