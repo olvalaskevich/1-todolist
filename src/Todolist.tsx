@@ -1,22 +1,28 @@
-import React, {useState, ChangeEvent, KeyboardEvent, useCallback, useEffect} from "react";
+import React, {ChangeEvent, useCallback, useEffect} from "react";
 import {FilterType, TodolistTasksType} from "./App";
 import './App.css'
 import {CommonInput} from "./CommonInput";
 import {EditSpan} from "./EditSpan";
-import {Button, Checkbox, IconButton} from "@mui/material";
+import {Button} from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootState} from "./state/store";
 import {
     ChangeFilterTdAC,
-    ChangeTitleTdAC,
     DeleteTodolistsTC,
-    GetTodolistsTC,
-    RemoveTdAC, UpdateTodolistsTC
+    UpdateTodolistsTC
 } from "./state/todolists-reducer";
-import {AddTaskAC, AddTasksTC, ChangeCheckedAC, ChangeTitleTaskAC, RemoveTaskAC} from "./state/tasks-reducer";
+import {
+    AddTasksTC,
+    ChangeCheckedAC,
+    ChangeTitleTaskAC,
+    DeleteTasksTC,
+    RemoveTaskAC,
+    SetTasksTC, UpdateTasksStatusTC, UpdateTasksTC
+} from "./state/tasks-reducer";
 import {Task} from "./Task";
-import {todolistsAPI} from "./api/todolistsAPI";
+import {TaskStatuses, TasksType} from "./api/todolistsAPI";
+
 
 
 
@@ -30,17 +36,22 @@ type TodolistPropsType={
 
 export const Todolist = React.memo((props:TodolistPropsType) => {
 
+    let dispatch=useDispatch()
+
+    useEffect(()=>{
+        dispatch(SetTasksTC(props.id) as any)
+    },[])
 
     let tasks=useSelector<AppRootState, TodolistTasksType>((state)=>state.tasks)
 
     let tasksForTodolist=tasks[props.id];
+
     if (props.filter==='completed'){
         tasksForTodolist=tasks[props.id].filter(t=> t.status);
     }
     if (props.filter==='active'){
         tasksForTodolist=tasks[props.id].filter(t=> !t.status);
     }
-    let dispatch=useDispatch()
 
         const onChangeAllFilter =useCallback( () => {
             dispatch(ChangeFilterTdAC(props.id,'all'))
@@ -68,14 +79,17 @@ export const Todolist = React.memo((props:TodolistPropsType) => {
         }, [props.id])
 
     const removeTaskHandler=useCallback((taskId:string)=>{
-        dispatch(RemoveTaskAC(props.id,taskId))
+        dispatch(DeleteTasksTC(props.id,taskId) as any)
     }, [props.id])
 
     const changeChackedHandler=useCallback((event:ChangeEvent<HTMLInputElement>, taskId:string)=>{
-        dispatch(ChangeCheckedAC(taskId,event.currentTarget.checked,props.id))
+
+        let status=event.currentTarget.checked? TaskStatuses.Completed:TaskStatuses.New
+        dispatch(UpdateTasksStatusTC(props.id, taskId, status) as any)
     },[props.id])
+
     const changeEditSpan=useCallback((value:string, taskId:string)=>{
-        dispatch(ChangeTitleTaskAC(value,taskId,props.id))
+        dispatch(UpdateTasksTC(props.id, taskId, value) as any)
     },[props.id])
 
 
