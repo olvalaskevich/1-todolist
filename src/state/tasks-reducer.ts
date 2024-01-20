@@ -2,8 +2,10 @@ import {TodolistTasksType} from "../App";
 import {v1} from "uuid";
 import {AddTODOLISTActionType, RemoveTODOLISTActionType, SetTodolistsActionType} from "./todolists-reducer";
 
-import {TasksType, todolistsAPI} from "../api/todolistsAPI";
+import {TaskStatuses, TasksType, todolistsAPI, UpdateTasksDomainType, UpdateTasksType} from "../api/todolistsAPI";
 import {Dispatch} from "redux";
+import {useSelector} from "react-redux";
+import {AppRootState} from "./store";
 
 
 type RemoveTaskTypeAction={
@@ -21,13 +23,13 @@ type AddTaskTypeAction={
 type ChangeCheckedTypeAction={
     type:'Change checked',
     idChecked:string,
-    isDone:boolean,
+    model:TasksType,
     tdId:string
 }
 
 type ChangeTitleTaskActionType={
     type:'Change title of task',
-    value:string,
+    value:UpdateTasksType,
     id:string,
     idTd:string
 }
@@ -65,20 +67,21 @@ export const tasksReducer=(state:TodolistTasksType=initialState, action:TasksRed
         case 'Change checked':{
 
             let taskChecked=state[action.tdId];
-            state[action.tdId]=taskChecked.map(t=>t.id===action.idChecked? {...t, isDone:action.isDone} : t);
+            state[action.tdId]=taskChecked.map(t=>t.id===action.idChecked? {...t, status:action.model.status} : t);
 
-            return {...state}
+            return ({...state})
             }
 
         case 'Change title of task':{
-            let changeToDoTask=[...state[action.idTd]];
-            let changeTask=changeToDoTask.find((t)=>t.id===action.id);
-            if (changeTask)
-                changeTask.title=action.value
-            return {...state, [action.idTd]: changeToDoTask}
+
+            let changeToDoTask=state[action.idTd];
+            let changeTask=changeToDoTask.map((t)=>t.id===action.id ? {...t, title:action.value.title} : t);
+
+            state[action.idTd]=changeTask
+            return ({...state})
         }
         case 'Add TODOLIST':{
-            return {...state, [action.idTd]:[]}
+            return {...state, [action.td.id]:[]}
         }
 
         case 'Remove TODOLIST':{
@@ -108,12 +111,12 @@ export const AddTaskAC=(task:TasksType):AddTaskTypeAction=>{
     return {type:'Add task', task: task}
 }
 
-export const ChangeCheckedAC=(idChecked:string, isDone:boolean, tdId:string):ChangeCheckedTypeAction=>{
-    return {type:'Change checked', idChecked:idChecked, isDone: isDone, tdId: tdId}
+export const ChangeCheckedAC=(idChecked:string, model:TasksType, tdId:string):ChangeCheckedTypeAction=>{
+    return {type:'Change checked', idChecked:idChecked, model: model, tdId: tdId}
 }
 
-export const ChangeTitleTaskAC=(value:string, id:string, idTd:string):ChangeTitleTaskActionType=>{
-    return {type:'Change title of task', value:value, id: id, idTd: idTd}
+export const ChangeTitleTaskAC=(model:UpdateTasksType, id:string, idTd:string):ChangeTitleTaskActionType=>{
+    return {type:'Change title of task', value:model, id: id, idTd: idTd}
 }
 
 export const SetTasksAC=(todolistId:string, tasks:Array<TasksType>)=>{
@@ -131,5 +134,51 @@ export const AddTasksTC=(idTd:string, title:string)=>{
     return (dispatch:Dispatch)=>{
         todolistsAPI.createTask(idTd, title)
             .then((res)=>{dispatch(AddTaskAC(res.data.data.item))})
+    }
+}
+
+export const DeleteTasksTC=(idTd:string, idTask:string)=>{
+    return (dispatch:Dispatch)=>{
+        todolistsAPI.deleteTask(idTd, idTask)
+            .then((res)=>{dispatch(RemoveTaskAC(idTd, idTask))})
+    }
+}
+
+export const UpdateTasksTC=(idTd:string, idTask:string, value:string)=>{
+
+    return (dispatch:Dispatch, getState: ()=> AppRootState)=>{
+        let allTasks=getState().tasks;
+        let tasksForTodolists=allTasks[idTd]
+        const task=tasksForTodolists.find((t)=>t.id===idTask)
+        if (task)
+        todolistsAPI.updateTask(idTd, idTask, {
+            title: value,
+            startDate: task.startDate,
+            priority: task.priority,
+            description: task.description,
+            deadline: task.deadline,
+            status: task.status
+        })
+            .then((res)=>{dispatch(ChangeTitleTaskAC(res.data.data.item, idTask, idTd))})
+    }
+}
+
+export const UpdateTasksStatusTC=(idTd:string, idTask:string, status:number)=>{
+        return (dispatch:Dispatch, getState: () => AppRootState)=>{
+
+            let allTasks=getState().tasks;
+            let tasksForTodolists=allTasks[idTd]
+            const task=tasksForTodolists.find((t)=>t.id===idTask)
+            if (task)
+
+        todolistsAPI.updateTask(idTd, idTask, {
+            title: task.title,
+            startDate: task.startDate,
+            priority: task.priority,
+            description: task.description,
+            deadline: task.deadline,
+            status: status
+        })
+            .then((res)=>{dispatch(ChangeCheckedAC(idTask, res.data.data.item, idTd))})
     }
 }
