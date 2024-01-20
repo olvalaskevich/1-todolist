@@ -1,16 +1,17 @@
 import React, {ChangeEvent, useCallback} from 'react';
-import {ChangeCheckedAC, ChangeTitleTaskAC, RemoveTaskAC} from "./state/tasks-reducer";
+
 import {Checkbox, IconButton} from "@mui/material";
 import {EditSpan} from "./EditSpan";
 import DeleteIcon from "@mui/icons-material/Delete";
-import {TaskType} from "./Todolist";
+
+import {TaskStatuses, TasksType} from "./api/todolistsAPI";
 
 
 type TaskPropsType={
     removeTaskHandler:(taskId:string)=>void
     changeChackedHandler:(event:ChangeEvent<HTMLInputElement>, taskId:string)=>void
     changeEditSpan:(value:string, taskId:string)=>void
-    task:TaskType
+    task:TasksType
 
 }
 
@@ -30,8 +31,8 @@ export const Task =React.memo( (props:TaskPropsType) => {
 
     return (
 
-    <li className={props.task.isDone ?'done':''} key={props.task.id}>
-        <Checkbox onChange={onChangeHandler} checked={props.task.isDone} color="secondary"/>
+    <li className={props.task.status ?'done':''} key={props.task.id}>
+        <Checkbox onChange={onChangeHandler} checked={props.task.status===TaskStatuses.Completed?true:false} color="secondary"/>
         <EditSpan changeEditSpan={changeEditSpan} title={props.task.title}/>
         <IconButton onClick={()=>{props.removeTaskHandler(props.task.id)}}><DeleteIcon/></IconButton>
     </li>
