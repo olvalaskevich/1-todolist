@@ -15,7 +15,7 @@ export type TodolistType={
     order: number
 }
 
-type ResponseType<T={}>={
+export type ResponseType<T={}>={
     resultCode: number
     messages: Array<string>
     data: {
@@ -42,7 +42,7 @@ type ResponseTasksType={
     error: string
 }
 
-type UpdateTasksType={
+export type UpdateTasksType={
     title: string
     description: string
     status: number
@@ -51,6 +51,29 @@ type UpdateTasksType={
     deadline: string
 }
 
+export type UpdateTasksDomainType={
+    title?: string
+    description?: string
+    status?: number
+    priority?: number
+    startDate?: string
+    deadline?: string
+}
+
+export enum TaskStatuses {
+    New,
+    InProgress,
+    Completed,
+    Draft
+}
+
+export enum TaskPriorities {
+    Low,
+    Middle,
+    Hi,
+    Urgently,
+    Later
+}
 
 
 export const todolistsAPI={
@@ -84,7 +107,7 @@ export const todolistsAPI={
     },
 
     updateTask(idTd:string, taskId:string, model:UpdateTasksType){
-        return instance.put<ResponseType>(`todo-lists/${idTd}/tasks/${taskId}`, model)
+        return instance.put<ResponseType<TasksType>>(`todo-lists/${idTd}/tasks/${taskId}`, model)
     },
 
     deleteTask(idTd:string, taskId:string){
