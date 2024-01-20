@@ -8,6 +8,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppRootState} from "./state/store";
 import {AddTdAC, CreateTodolistsTC, GetTodolistsTC} from "./state/todolists-reducer";
 import {TasksType} from "./api/todolistsAPI";
+import {SetTasksTC} from "./state/tasks-reducer";
 
 export type FilterType='all' | 'active' | 'completed'
 export type TodoListTitleType={
