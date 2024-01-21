@@ -22,9 +22,7 @@ type AddTaskTypeAction={
 
 type ChangeCheckedTypeAction={
     type:'Change checked',
-    idChecked:string,
-    model:TasksType,
-    tdId:string
+    model:TasksType
 }
 
 type ChangeTitleTaskActionType={
@@ -64,8 +62,8 @@ export const tasksReducer=(state:TodolistTasksType=initialState, action:TasksRed
 
         case 'Change checked':{
 
-            let taskChecked=state[action.tdId];
-            state[action.tdId]=taskChecked.map(t=>t.id===action.idChecked? {...t, status:action.model.status} : t);
+            let taskChecked=state[action.model.todoListId];
+            state[action.model.todoListId]=taskChecked.map(t=>t.id===action.model.id? {...t, status:action.model.status} : t);
 
             return ({...state})
             }
@@ -109,8 +107,8 @@ export const AddTaskAC=(task:TasksType):AddTaskTypeAction=>{
     return {type:'Add task', task: task}
 }
 
-export const ChangeCheckedAC=(idChecked:string, model:TasksType, tdId:string):ChangeCheckedTypeAction=>{
-    return {type:'Change checked', idChecked:idChecked, model: model, tdId: tdId}
+export const ChangeCheckedAC=(model:TasksType):ChangeCheckedTypeAction=>{
+    return {type:'Change checked',model: model}
 }
 
 export const ChangeTitleTaskAC=(model:TasksType):ChangeTitleTaskActionType=>{
@@ -177,6 +175,6 @@ export const UpdateTasksStatusTC=(idTd:string, idTask:string, status:number)=>{
             deadline: task.deadline,
             status: status
         })
-            .then((res)=>{dispatch(ChangeCheckedAC(idTask, res.data.data.item, idTd))})
+            .then((res)=>{dispatch(ChangeCheckedAC(res.data.data.item))})
     }
 }
