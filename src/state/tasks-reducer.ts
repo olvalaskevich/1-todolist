@@ -1,49 +1,17 @@
 import {TodolistTasksType} from "../App";
-import {v1} from "uuid";
 import {AddTODOLISTActionType, RemoveTODOLISTActionType, SetTodolistsActionType} from "./todolists-reducer";
-
-import {TaskStatuses, TasksType, todolistsAPI, UpdateTasksDomainType, UpdateTasksType} from "../api/todolistsAPI";
+import {TasksType, todolistsAPI} from "../api/todolistsAPI";
 import {Dispatch} from "redux";
-import {useSelector} from "react-redux";
 import {AppRootState} from "./store";
 
-
-type RemoveTaskTypeAction={
-    type:'Remove task',
-    tdId:string,
-    id:string
-}
-
-type AddTaskTypeAction={
-    type:'Add task',
-    task:TasksType
-
-}
-
-type ChangeCheckedTypeAction={
-    type:'Change checked',
-    model:TasksType
-}
-
-type ChangeTitleTaskActionType={
-    type:'Change title of task',
-    value:TasksType
-}
-
-type SetTasksActionType={
-    type:'SET-TASKS'
-    tasks:Array<TasksType>
-    todolistId:string
-}
-
-type TasksReducerActionType=RemoveTaskTypeAction |
-    AddTaskTypeAction |
-    ChangeCheckedTypeAction |
-    ChangeTitleTaskActionType |
-    AddTODOLISTActionType |
-    RemoveTODOLISTActionType |
-    SetTodolistsActionType |
-    SetTasksActionType
+type TasksReducerActionType=ReturnType<typeof RemoveTaskAC> |
+     ReturnType<typeof AddTaskAC>|
+     ReturnType<typeof ChangeCheckedAC> |
+     ReturnType<typeof ChangeTitleTaskAC>|
+     ReturnType<typeof SetTasksAC> |
+     AddTODOLISTActionType |
+     RemoveTODOLISTActionType |
+     SetTodolistsActionType
 
 const initialState:TodolistTasksType= {}
 
@@ -56,69 +24,45 @@ export const tasksReducer=(state:TodolistTasksType=initialState, action:TasksRed
         }
         case 'Remove task':
             return {...state, [action.tdId]:state[action.tdId].filter( t => t.id !== action.id )}
-
         case 'Add task':
             return {...state, [action.task.todoListId]:[...state[action.task.todoListId], action.task]}
-
         case 'Change checked':{
-
-            let taskChecked=state[action.model.todoListId];
-            state[action.model.todoListId]=taskChecked.map(t=>t.id===action.model.id? {...t, status:action.model.status} : t);
-
-            return ({...state})
-            }
-
+            return ({...state, [action.model.todoListId]:state[action.model.todoListId].map(t=>t.id===action.model.id?
+                    {...t, status:action.model.status} : t)})}
         case 'Change title of task':{
-
-            let changeToDoTask=state[action.value.todoListId];
-            let changeTask=changeToDoTask.map((t)=>t.id===action.value.id ? {...t, title:action.value.title} : t);
-
-            state[action.value.todoListId]=changeTask
-            return ({...state})
-        }
+            return ({...state, [action.value.todoListId]:state[action.value.todoListId].map((t)=>t.id===action.value.id ?
+                    {...t, title:action.value.title} : t)})}
         case 'Add TODOLIST':{
             return {...state, [action.td.id]:[]}
         }
-
         case 'Remove TODOLIST':{
             let copyDataState={...state}
             delete copyDataState[action.id]
             return copyDataState
         }
         case 'SET-TASKS':{
-            let copyState= {...state}
-            copyState[action.todolistId]=action.tasks
-            return copyState
-
+            return {...state, [action.todolistId]:action.tasks}
         }
-
         default:
             return state
-
     }
 }
 
-
-export const RemoveTaskAC=(tdId:string, id:string):RemoveTaskTypeAction=>{
-    return {type:'Remove task', tdId: tdId, id: id}
+export const RemoveTaskAC=(tdId:string, id:string)=>{
+    return ({type:'Remove task', tdId: tdId, id: id} as const)
 }
-
-export const AddTaskAC=(task:TasksType):AddTaskTypeAction=>{
-    return {type:'Add task', task: task}
+export const AddTaskAC=(task:TasksType)=>{
+    return ({type:'Add task', task: task} as const)
 }
-
-export const ChangeCheckedAC=(model:TasksType):ChangeCheckedTypeAction=>{
-    return {type:'Change checked',model: model}
+export const ChangeCheckedAC=(model:TasksType)=>{
+    return ({type:'Change checked',model: model} as const)
 }
-
-export const ChangeTitleTaskAC=(model:TasksType):ChangeTitleTaskActionType=>{
-    return {type:'Change title of task', value:model}
+export const ChangeTitleTaskAC=(model:TasksType)=>{
+    return ({type:'Change title of task', value:model} as const)
 }
-
 export const SetTasksAC=(todolistId:string, tasks:Array<TasksType>)=>{
-    return {type:'SET-TASKS', tasks:tasks, todolistId:todolistId}
+    return ({type:'SET-TASKS', tasks:tasks, todolistId:todolistId} as const)
 }
-
 export const SetTasksTC=(idTd:string)=>{
     return (dispatch:Dispatch)=>{
         todolistsAPI.getTasks(idTd)
@@ -132,14 +76,12 @@ export const AddTasksTC=(idTd:string, title:string)=>{
             .then((res)=>{dispatch(AddTaskAC(res.data.data.item))})
     }
 }
-
 export const DeleteTasksTC=(idTd:string, idTask:string)=>{
     return (dispatch:Dispatch)=>{
         todolistsAPI.deleteTask(idTd, idTask)
             .then((res)=>{dispatch(RemoveTaskAC(idTd, idTask))})
     }
 }
-
 export const UpdateTasksTC=(idTd:string, idTask:string, value:string)=>{
 
     return (dispatch:Dispatch, getState: ()=> AppRootState)=>{
