@@ -14,14 +14,11 @@ import {
 } from "./state/todolists-reducer";
 import {
     AddTasksTC,
-    ChangeCheckedAC,
-    ChangeTitleTaskAC,
     DeleteTasksTC,
-    RemoveTaskAC,
     SetTasksTC, UpdateTasksStatusTC, UpdateTasksTC
 } from "./state/tasks-reducer";
 import {Task} from "./Task";
-import {TaskStatuses, TasksType} from "./api/todolistsAPI";
+import {TaskStatuses} from "./api/todolistsAPI";
 
 
 
