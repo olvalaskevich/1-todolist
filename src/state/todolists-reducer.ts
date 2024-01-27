@@ -12,19 +12,7 @@ export type AddTODOLISTActionType={
     type:'Add TODOLIST',
     td:TodolistType
 }
-//
-// export type ChangeTitleTODOLISTActionType={
-//     type:'Change title TODOLIST',
-//     idTd:string,
-//     value:string
-// }
-//
-// export type ChangeFilterOfTodolistActionType={
-//     type:'Change filter of todolist',
-//     idTd:string,
-//     filter:FilterType
-// }
-//
+
 export type SetTodolistsActionType={
     type:'SET-TODOLISTS',
     todolists:Array<TodolistType>
@@ -79,21 +67,18 @@ export const GetTodolistsTC=()=>{
             .then((res)=>{dispatch(SetTodolistsAC(res.data))})
     }
 }
-
 export const CreateTodolistsTC=(title:string)=>{
     return (dispatch:Dispatch)=>{
         todolistsAPI.createToDoLists(title)
             .then((res)=>{dispatch(AddTdAC(res.data.data.item))})
     }
 }
-
 export const DeleteTodolistsTC=(idTd:string)=>{
     return (dispatch:Dispatch)=>{
         todolistsAPI.deleteToDoList(idTd)
             .then((res)=>{dispatch(RemoveTdAC(idTd))})
     }
 }
-
 export const UpdateTodolistsTC=(idTd:string, title:string)=>{
     return (dispatch:Dispatch)=>{
         todolistsAPI.updateTodolist(idTd, title)
