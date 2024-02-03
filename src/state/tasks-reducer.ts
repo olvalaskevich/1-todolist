@@ -83,7 +83,6 @@ export const DeleteTasksTC=(idTd:string, idTask:string)=>{
     }
 }
 export const UpdateTasksTC=(idTd:string, idTask:string, value:string)=>{
-
     return (dispatch:Dispatch, getState: ()=> AppRootState)=>{
         let allTasks=getState().tasks;
         let tasksForTodolists=allTasks[idTd]
@@ -96,19 +95,15 @@ export const UpdateTasksTC=(idTd:string, idTask:string, value:string)=>{
             description: task.description,
             deadline: task.deadline,
             status: task.status
-        })
-            .then((res)=>{dispatch(ChangeTitleTaskAC(res.data.data.item))})
+        }).then((res)=>{dispatch(ChangeTitleTaskAC(res.data.data.item))})
     }
 }
-
 export const UpdateTasksStatusTC=(idTd:string, idTask:string, status:number)=>{
         return (dispatch:Dispatch, getState: () => AppRootState)=>{
-
             let allTasks=getState().tasks;
             let tasksForTodolists=allTasks[idTd]
             const task=tasksForTodolists.find((t)=>t.id===idTask)
             if (task)
-
         todolistsAPI.updateTask(idTd, idTask, {
             title: task.title,
             startDate: task.startDate,
@@ -116,7 +111,6 @@ export const UpdateTasksStatusTC=(idTd:string, idTask:string, status:number)=>{
             description: task.description,
             deadline: task.deadline,
             status: status
-        })
-            .then((res)=>{dispatch(ChangeCheckedAC(res.data.data.item))})
+        }).then((res)=>{dispatch(ChangeCheckedAC(res.data.data.item))})
     }
 }
