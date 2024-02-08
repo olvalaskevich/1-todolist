@@ -2,9 +2,9 @@ import {TodolistTasksType} from "../App";
 import {AddTODOLISTActionType, RemoveTODOLISTActionType, SetTodolistsActionType} from "./todolists-reducer";
 import {TasksType, todolistsAPI} from "../api/todolistsAPI";
 import {Dispatch} from "redux";
-import {AppRootState} from "./store";
+import {AppActionsTypes} from "./store";
 
-type TasksReducerActionType=ReturnType<typeof RemoveTaskAC> |
+export type TasksReducerActionType=ReturnType<typeof RemoveTaskAC> |
      ReturnType<typeof AddTaskAC>|
      ReturnType<typeof ChangeCheckedAC> |
      ReturnType<typeof ChangeTitleTaskAC>|
@@ -70,20 +70,20 @@ export const SetTasksTC=(idTd:string)=>{
     }
 }
 
-export const AddTasksTC=(idTd:string, title:string)=>{
-    return (dispatch:Dispatch)=>{
+export const AddTasksTC=(idTd:string, title:string):AppActionsTypes=>{
+    return (dispatch)=>{
         todolistsAPI.createTask(idTd, title)
             .then((res)=>{dispatch(AddTaskAC(res.data.data.item))})
     }
 }
-export const DeleteTasksTC=(idTd:string, idTask:string)=>{
-    return (dispatch:Dispatch)=>{
+export const DeleteTasksTC=(idTd:string, idTask:string):AppActionsTypes=>{
+    return (dispatch)=>{
         todolistsAPI.deleteTask(idTd, idTask)
             .then((res)=>{dispatch(RemoveTaskAC(idTd, idTask))})
     }
 }
-export const UpdateTasksTC=(idTd:string, idTask:string, value:string)=>{
-    return (dispatch:Dispatch, getState: ()=> AppRootState)=>{
+export const UpdateTasksTC=(idTd:string, idTask:string, value:string):AppActionsTypes=>{
+    return (dispatch, getState)=>{
         let allTasks=getState().tasks;
         let tasksForTodolists=allTasks[idTd]
         const task=tasksForTodolists.find((t)=>t.id===idTask)
@@ -98,8 +98,8 @@ export const UpdateTasksTC=(idTd:string, idTask:string, value:string)=>{
         }).then((res)=>{dispatch(ChangeTitleTaskAC(res.data.data.item))})
     }
 }
-export const UpdateTasksStatusTC=(idTd:string, idTask:string, status:number)=>{
-        return (dispatch:Dispatch, getState: () => AppRootState)=>{
+export const UpdateTasksStatusTC=(idTd:string, idTask:string, status:number):AppActionsTypes=>{
+        return (dispatch, getState)=>{
             let allTasks=getState().tasks;
             let tasksForTodolists=allTasks[idTd]
             const task=tasksForTodolists.find((t)=>t.id===idTask)
