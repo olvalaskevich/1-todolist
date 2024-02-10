@@ -12,6 +12,7 @@ type TaskPropsType={
     changeChackedHandler:(event:ChangeEvent<HTMLInputElement>, taskId:string)=>void
     changeEditSpan:(value:string, taskId:string)=>void
     task:TasksType
+    disabled:boolean
 
 }
 
@@ -32,9 +33,9 @@ export const Task =React.memo( (props:TaskPropsType) => {
     return (
 
     <li className={props.task.status ?'done':''} key={props.task.id}>
-        <Checkbox onChange={onChangeHandler} checked={props.task.status===TaskStatuses.Completed?true:false} color="secondary"/>
-        <EditSpan changeEditSpan={changeEditSpan} title={props.task.title}/>
-        <IconButton onClick={()=>{props.removeTaskHandler(props.task.id)}}><DeleteIcon/></IconButton>
+        <Checkbox disabled={props.disabled} onChange={onChangeHandler} checked={props.task.status === TaskStatuses.Completed} color="secondary"/>
+        <EditSpan disabled={props.disabled} changeEditSpan={changeEditSpan} title={props.task.title}/>
+        <IconButton disabled={props.disabled} onClick={()=>{props.removeTaskHandler(props.task.id)}}><DeleteIcon/></IconButton>
     </li>
     );
 });
