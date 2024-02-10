@@ -1,8 +1,14 @@
 import {TodolistTasksType} from "../App";
-import {AddTODOLISTActionType, RemoveTODOLISTActionType, SetTodolistsActionType} from "./todolists-reducer";
+import {
+    AddTODOLISTActionType,
+    ChangeStatusTodolistAC,
+    RemoveTODOLISTActionType,
+    SetTodolistsActionType
+} from "./todolists-reducer";
 import {TasksType, todolistsAPI} from "../api/todolistsAPI";
 import {Dispatch} from "redux";
 import {AppActionsTypes} from "./store";
+import {appErrorAC} from "./app-reducer";
 
 export type TasksReducerActionType=ReturnType<typeof RemoveTaskAC> |
      ReturnType<typeof AddTaskAC>|
@@ -63,23 +69,43 @@ export const ChangeTitleTaskAC=(model:TasksType)=>{
 export const SetTasksAC=(todolistId:string, tasks:Array<TasksType>)=>{
     return ({type:'SET-TASKS', tasks:tasks, todolistId:todolistId} as const)
 }
-export const SetTasksTC=(idTd:string)=>{
-    return (dispatch:Dispatch)=>{
+export const SetTasksTC=(idTd:string):AppActionsTypes=>{
+    return (dispatch)=>{
+        dispatch(ChangeStatusTodolistAC(idTd, 'loading'))
         todolistsAPI.getTasks(idTd)
-            .then((res)=>{dispatch(SetTasksAC(idTd, res.data.items))})
+            .then((res)=>{
+                dispatch(SetTasksAC(idTd, res.data.items))
+                dispatch(ChangeStatusTodolistAC(idTd, 'success'))
+            })
+            .catch((err)=>{dispatch(appErrorAC(err))})
     }
 }
-
 export const AddTasksTC=(idTd:string, title:string):AppActionsTypes=>{
     return (dispatch)=>{
-        todolistsAPI.createTask(idTd, title)
-            .then((res)=>{dispatch(AddTaskAC(res.data.data.item))})
+        dispatch(ChangeStatusTodolistAC(idTd, 'loading'))
+        return todolistsAPI.createTask(idTd, title)
+            .then((res)=>{
+                if (res.data.resultCode===0){
+                dispatch(AddTaskAC(res.data.data.item))
+                dispatch(ChangeStatusTodolistAC(idTd, 'success'))
+                }
+                else {
+                    dispatch(appErrorAC(res.data.messages[0]))
+                    dispatch(ChangeStatusTodolistAC(idTd, 'idle'))
+                }
+            })
+            .catch((err)=>{dispatch(appErrorAC(err))})
     }
 }
 export const DeleteTasksTC=(idTd:string, idTask:string):AppActionsTypes=>{
     return (dispatch)=>{
+        dispatch(ChangeStatusTodolistAC(idTd, 'loading'))
         todolistsAPI.deleteTask(idTd, idTask)
-            .then((res)=>{dispatch(RemoveTaskAC(idTd, idTask))})
+            .then((res)=>{
+                dispatch(RemoveTaskAC(idTd, idTask))
+                dispatch(ChangeStatusTodolistAC(idTd, 'success'))
+            })
+            .catch((err)=>{dispatch(appErrorAC(err))})
     }
 }
 export const UpdateTasksTC=(idTd:string, idTask:string, value:string):AppActionsTypes=>{
@@ -87,7 +113,8 @@ export const UpdateTasksTC=(idTd:string, idTask:string, value:string):AppActions
         let allTasks=getState().tasks;
         let tasksForTodolists=allTasks[idTd]
         const task=tasksForTodolists.find((t)=>t.id===idTask)
-        if (task)
+        if (task){
+            dispatch(ChangeStatusTodolistAC(idTd,'loading'))
         todolistsAPI.updateTask(idTd, idTask, {
             title: value,
             startDate: task.startDate,
@@ -95,7 +122,16 @@ export const UpdateTasksTC=(idTd:string, idTask:string, value:string):AppActions
             description: task.description,
             deadline: task.deadline,
             status: task.status
-        }).then((res)=>{dispatch(ChangeTitleTaskAC(res.data.data.item))})
+        }).then((res)=>{
+            if (res.data.resultCode===0){
+            dispatch(ChangeTitleTaskAC(res.data.data.item))
+            dispatch(ChangeStatusTodolistAC(idTd,'success'))}
+            else {
+                dispatch(appErrorAC(res.data.messages[0]))
+                dispatch(ChangeStatusTodolistAC(idTd, 'success'))
+            }
+        }) .catch((err)=>{dispatch(appErrorAC(err))})
+        }
     }
 }
 export const UpdateTasksStatusTC=(idTd:string, idTask:string, status:number):AppActionsTypes=>{
@@ -103,7 +139,8 @@ export const UpdateTasksStatusTC=(idTd:string, idTask:string, status:number):App
             let allTasks=getState().tasks;
             let tasksForTodolists=allTasks[idTd]
             const task=tasksForTodolists.find((t)=>t.id===idTask)
-            if (task)
+            if (task){
+                dispatch(ChangeStatusTodolistAC(idTd,'loading'))
         todolistsAPI.updateTask(idTd, idTask, {
             title: task.title,
             startDate: task.startDate,
@@ -111,6 +148,9 @@ export const UpdateTasksStatusTC=(idTd:string, idTask:string, status:number):App
             description: task.description,
             deadline: task.deadline,
             status: status
-        }).then((res)=>{dispatch(ChangeCheckedAC(res.data.data.item))})
+        }).then((res)=>{
+            dispatch(ChangeCheckedAC(res.data.data.item))
+            dispatch(ChangeStatusTodolistAC(idTd,'success'))
+        }).catch((err)=>{dispatch(appErrorAC(err))})}
     }
 }
