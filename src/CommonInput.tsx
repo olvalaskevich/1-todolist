@@ -1,10 +1,13 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
 import {IconButton, TextField} from "@mui/material";
 import {AddOutlined} from "@mui/icons-material";
+import {useSelector} from "react-redux";
+import {AppRootState} from "./state/store";
 
 type CommonInputPropsType={
     label:string,
     addItem:(item:string)=>void,
+    disabled:boolean
 }
 
 
@@ -13,6 +16,7 @@ export const CommonInput = React.memo( (props:CommonInputPropsType) => {
 
     let [newTaskTitle, setNewTaskTitle]=useState('')
     let [error, setError]=useState<string|null>(null)
+    let addTaskError=useSelector<AppRootState, string|null>(state=>state.app.error)
     const onChangeInputHandler=(event:ChangeEvent<HTMLInputElement>)=>{
         setNewTaskTitle(event.currentTarget.value)
         if (error!==null)
@@ -23,7 +27,9 @@ export const CommonInput = React.memo( (props:CommonInputPropsType) => {
     const onClickBtnHandler=()=>{
         if (newTaskTitle.trim()!==''){
             props.addItem(newTaskTitle.trim())
+            if (addTaskError===null){
             setNewTaskTitle('')}
+        }
         else {setError("Invalid value")}
     }
 
@@ -48,8 +54,10 @@ export const CommonInput = React.memo( (props:CommonInputPropsType) => {
                        color={'secondary'}
                        variant="outlined"
                        onKeyPress={onKeyEnter}
-                       onChange={onChangeInputHandler} value={newTaskTitle}/>
-            <IconButton onClick={onClickBtnHandler} color={"secondary"}>
+                       onChange={onChangeInputHandler}
+                       value={newTaskTitle}
+                       disabled={props.disabled}/>
+            <IconButton disabled={props.disabled} onClick={onClickBtnHandler} color={"secondary"}>
                 <AddOutlined/>
             </IconButton>
             {error && <div className={'textError'}>Invalid value</div>}
