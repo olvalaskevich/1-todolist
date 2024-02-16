@@ -2,33 +2,48 @@ import React, {useCallback, useEffect} from 'react';
 import './App.css';
 import {Todolist} from "./Todolist";
 import {CommonInput} from "./CommonInput";
-import {AppBar, Box, Button, Container, Grid, IconButton, Paper, Toolbar, Typography} from "@mui/material";
+import {
+    AppBar,
+    Box,
+    Button,
+    Container,
+    Grid,
+    IconButton,
+    LinearProgress,
+    Paper,
+    Toolbar,
+    Typography
+} from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootState} from "./state/store";
-import {AddTdAC, CreateTodolistsTC, GetTodolistsTC} from "./state/todolists-reducer";
+import {CreateTodolistsTC, GetTodolistsTC} from "./state/todolists-reducer";
 import {TasksType} from "./api/todolistsAPI";
-import {SetTasksTC} from "./state/tasks-reducer";
+import {statusType} from "./state/app-reducer";
+import {ErrorUtil} from "./error-util";
 
 export type FilterType='all' | 'active' | 'completed'
-export type TodoListTitleType={
-    id:string,
-    title:string,
+export type TodoListTitleType = {
+    id: string,
+    title: string,
     addedDate: string
     order: number
-} & {filter:FilterType}
+} & { filter: FilterType }
+    & { entityStatus: statusType }
 
 export type TodolistTasksType={
     [key:string]:Array<TasksType>
 }
+
+
 
 function App() {
 
 
     let dispatch= useDispatch()
     let todolists=useSelector<AppRootState, Array<TodoListTitleType>>((state)=>state.todolists)
-
-
+    let status=useSelector<AppRootState,statusType>((state)=>state.app.status)
+    // let error=useSelector<AppRootState,string|null>((state)=>state.app.error)
 
     const addItem=useCallback((item:string)=>{
         // let action=AddTdAC(item)
@@ -60,11 +75,12 @@ function App() {
                         </Typography>
                         <Button color="inherit">Login</Button>
                     </Toolbar>
+                    {status==='loading' && <LinearProgress />}
                 </AppBar>
             </Box>
             <Container fixed>
                 <Grid container style={{paddingTop:'20px'}}>
-            <CommonInput label={'New ToDoList'} addItem={addItem}/>
+            <CommonInput disabled={false} label={'New ToDoList'} addItem={addItem}/>
                 </Grid>
                 <Grid container spacing={3} style={{paddingTop:'20px'}}>
 
@@ -74,15 +90,14 @@ function App() {
 
                 return <Grid item>
                     <Paper elevation={3} square={false} style={{padding:'10px'}}>
-                        <Todolist title={t.title}
-                                  id={t.id}
-                                  filter={t.filter}
-                        />
+                        <Todolist todolist={t}/>
                     </Paper>
                     </Grid>
             })}
                     </Grid>
+
             </Container>
+            <ErrorUtil/>
         </div>
     );
 }
