@@ -5,7 +5,7 @@ import {CommonInput} from "./CommonInput";
 import {
     AppBar,
     Box,
-    Button,
+    Button, CircularProgress,
     Container,
     Grid,
     IconButton,
@@ -21,6 +21,9 @@ import {CreateTodolistsTC, GetTodolistsTC} from "./state/todolists-reducer";
 import {TasksType} from "./api/todolistsAPI";
 import {statusType} from "./state/app-reducer";
 import {ErrorUtil} from "./error-util";
+import {Todolists} from "./Todolists";
+import {BrowserRouter, Route, Routes} from "react-router-dom";
+import {Login} from "./Login";
 
 export type FilterType='all' | 'active' | 'completed'
 export type TodoListTitleType = {
@@ -39,66 +42,54 @@ export type TodolistTasksType={
 
 function App() {
 
-
+    let status=useSelector<AppRootState,string>((state)=>state.app.status)
     let dispatch= useDispatch()
-    let todolists=useSelector<AppRootState, Array<TodoListTitleType>>((state)=>state.todolists)
-    let status=useSelector<AppRootState,statusType>((state)=>state.app.status)
-    // let error=useSelector<AppRootState,string|null>((state)=>state.app.error)
+    let isInitialised=useSelector<AppRootState,boolean>((state)=>state.app.isInitialized)
 
-    const addItem=useCallback((item:string)=>{
-        // let action=AddTdAC(item)
-        dispatch(CreateTodolistsTC(item) as any)
-    }, [dispatch])
+    useEffect(() => {
+        dispatch()
+    }, []);
 
-    useEffect(()=>{
-        dispatch(GetTodolistsTC() as any)
-    },[])
+    if (!isInitialised) return <CircularProgress color="secondary"/>
+    else return (
 
+        <BrowserRouter>
+            <div className="App">
+                <Box sx={{flexGrow: 1}}>
+                    <AppBar position="static">
+                        <Toolbar>
+                            <IconButton
+                                size="large"
+                                edge="start"
+                                color="inherit"
+                                aria-label="menu"
+                                sx={{mr: 2}}
+                            >
+                                <MenuIcon/>
+                            </IconButton>
+                            <Typography variant="h6" component="div" sx={{flexGrow: 1}}>
+                                News
+                            </Typography>
+                            <Button color="inherit">Login</Button>
+                        </Toolbar>
+                        {status === 'loading' && <LinearProgress/>}
+                    </AppBar>
+                </Box>
+                <Container fixed>
 
-
-    return (
-        <div className="App">
-            <Box sx={{ flexGrow: 1 }}>
-                <AppBar position="static">
-                    <Toolbar>
-                        <IconButton
-                            size="large"
-                            edge="start"
-                            color="inherit"
-                            aria-label="menu"
-                            sx={{ mr: 2 }}
-                        >
-                            <MenuIcon />
-                        </IconButton>
-                        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                            News
-                        </Typography>
-                        <Button color="inherit">Login</Button>
-                    </Toolbar>
-                    {status==='loading' && <LinearProgress />}
-                </AppBar>
-            </Box>
-            <Container fixed>
-                <Grid container style={{paddingTop:'20px'}}>
-            <CommonInput disabled={false} label={'New ToDoList'} addItem={addItem}/>
-                </Grid>
-                <Grid container spacing={3} style={{paddingTop:'20px'}}>
-
-
-            {todolists.map((t)=>{
-
-
-                return <Grid item>
-                    <Paper elevation={3} square={false} style={{padding:'10px'}}>
-                        <Todolist todolist={t}/>
-                    </Paper>
-                    </Grid>
-            })}
+                    <Grid container spacing={3} style={{paddingTop: '20px'}}>
+                        <Routes>
+                            <Route path={'/'} element={<Todolists/>}/>
+                            <Route path={'/login'} element={<Login/>}/>
+                        </Routes>
                     </Grid>
 
-            </Container>
-            <ErrorUtil/>
-        </div>
+                </Container>
+                <ErrorUtil/>
+            </div>
+        </BrowserRouter>
+
+
     );
 }
 
