@@ -1,4 +1,5 @@
 import axios from 'axios'
+import {DataAuthResponseType} from "../state/auth-reducer";
 
 const instance=axios.create({
     baseURL:'https://social-network.samuraijs.com/api/1.1/',
@@ -21,6 +22,19 @@ export type ResponseType<T={}>={
     data: {
         item: T
     }
+}
+
+type ResponseAuthType<T>={
+    data:T
+    resultCode: number
+    messages: Array<string>
+}
+
+export type LoginDataType={
+    email:string
+    password:string
+    rememberMe:boolean
+    captcha?:string
 }
 
 export type TasksType={
@@ -112,6 +126,24 @@ export const todolistsAPI={
 
     deleteTask(idTd:string, taskId:string){
         return instance.delete<ResponseType>(`todo-lists/${idTd}/tasks/${taskId}`)
+    }
+
+}
+
+export const authAPI={
+
+    //AUTH ME
+
+    setIsAuth(){
+        return instance.get<ResponseAuthType<DataAuthResponseType>>('auth/me')
+    },
+
+    setLogin(payload:LoginDataType) {
+        return instance.post<ResponseAuthType<{userId:number}>>('auth/login', payload)
+    },
+
+    logOut() {
+        return instance.delete<ResponseAuthType<{}>>('auth/login')
     }
 
 }
