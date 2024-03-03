@@ -2,6 +2,8 @@ import {AppActionsTypes} from "./store";
 import {authAPI, LoginDataType} from "../api/todolistsAPI";
 import {appErrorAC, appStatusAC, setIsInitialisedAC} from "./app-reducer";
 import {isAuthAC} from "./auth-reducer";
+import {ClearTodolistsLogOutAC} from "./todolists-reducer";
+import {ClearTasksLogOutAC} from "./tasks-reducer";
 
 
 type LoginStateType={
@@ -54,6 +56,8 @@ export const logOutTC=():AppActionsTypes=>{
         authAPI.logOut()
             .then((res)=>{
                 dispatch(isAuthAC(false))
+                dispatch(ClearTodolistsLogOutAC())
+                dispatch(ClearTasksLogOutAC())
                 dispatch(appStatusAC('success'))
             })
     }
