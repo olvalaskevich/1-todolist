@@ -2,6 +2,7 @@ import {FilterType, TodoListTitleType} from "../App";
 import {todolistsAPI, TodolistType} from "../api/todolistsAPI";
 import {AppActionsTypes} from "./store";
 import {appErrorAC, appStatusAC, statusType} from "./app-reducer";
+import {SetTasksTC} from "./tasks-reducer";
 
 
 export type RemoveTODOLISTActionType={
@@ -23,7 +24,9 @@ export type TasksActionType = RemoveTODOLISTActionType |
     AddTODOLISTActionType |
     ReturnType<typeof ChangeTitleTdAC> |
     ReturnType<typeof ChangeFilterTdAC> |
-    SetTodolistsActionType | ReturnType<typeof ChangeStatusTodolistAC>
+    SetTodolistsActionType |
+    ReturnType<typeof ChangeStatusTodolistAC> |
+    ReturnType<typeof ClearTodolistsLogOutAC>
 
 const initialState:Array<TodoListTitleType>=[]
 
@@ -43,6 +46,8 @@ export const todolistReducer= (state:Array<TodoListTitleType>=initialState, acti
             }
             case 'CHANGE STATUS OF TODOLIST':
                 return state.map((tl)=>tl.id===action.idTd?{...tl, entityStatus:action.statusTd}:tl)
+            case 'CLEAR-TODOLISTS-LOGOUT':
+                return []
             default:
                return state
         }
@@ -66,13 +71,21 @@ export const SetTodolistsAC=(td:Array<TodolistType>):SetTodolistsActionType=>{
 export const ChangeStatusTodolistAC=(idTd:string, statusTd:statusType)=>{
     return({type:'CHANGE STATUS OF TODOLIST', idTd:idTd, statusTd:statusTd} as const)
 }
+export const ClearTodolistsLogOutAC=()=>{
+    return ({type:'CLEAR-TODOLISTS-LOGOUT'} as const)
+}
 
 export const GetTodolistsTC=():AppActionsTypes=>{
     return (dispatch)=>{
         dispatch(appStatusAC('loading'))
         todolistsAPI.getToDoLists()
-            .then((res)=>{dispatch(SetTodolistsAC(res.data))
-                dispatch(appStatusAC('idle'))})
+            .then((res)=>{
+                dispatch(SetTodolistsAC(res.data))
+                dispatch(appStatusAC('idle'))
+            return res})
+            .then((res)=>{
+                res.data.forEach((td)=>dispatch(SetTasksTC(td.id)))
+            })
             .catch((err)=>{dispatch(appErrorAC(err))})
     }
 }
