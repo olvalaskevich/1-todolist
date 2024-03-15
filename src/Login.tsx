@@ -11,10 +11,7 @@ import {useFormik} from "formik";
 import {setLoginTC} from "./state/login-reducer";
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatchType, AppRootState} from "./state/store";
-import {CircularProgress} from "@mui/material";
-import {ErrorUtil} from "./error-util";
 import {Navigate} from "react-router-dom";
-import {AuthStateType} from "./state/auth-reducer";
 
 type FormikErrorType = {
     email?: string
@@ -26,7 +23,7 @@ type FormikErrorType = {
 export const Login = () => {
     let dispatch=useDispatch<AppDispatchType>()
     let status=useSelector<AppRootState,string>((state)=>state.app.status)
-    let auth=useSelector<AppRootState,AuthStateType>((state)=>state.auth)
+    let auth=useSelector<AppRootState,boolean>((state)=>state.auth.isAuth)
 
     const formik = useFormik({
         initialValues: {
@@ -54,7 +51,7 @@ export const Login = () => {
 
 
 
-    if (auth.isAuth) return <Navigate to={'/'}/>
+    if (auth) return <Navigate to={'/'}/>
     else
         return (
     <Grid container justifyContent={'center'}>
