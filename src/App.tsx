@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import './App.css';
 import {Todolist} from "./Todolist";
 import {CommonInput} from "./CommonInput";
@@ -10,20 +10,20 @@ import {
     Grid,
     IconButton,
     LinearProgress,
-    Paper,
     Toolbar,
     Typography
 } from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
 import {useDispatch, useSelector} from "react-redux";
-import {AppRootState} from "./state/store";
-import {CreateTodolistsTC, GetTodolistsTC} from "./state/todolists-reducer";
+import {AppDispatchType, AppRootState} from "./state/store";
 import {TasksType} from "./api/todolistsAPI";
 import {statusType} from "./state/app-reducer";
 import {ErrorUtil} from "./error-util";
 import {Todolists} from "./Todolists";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import {Login} from "./Login";
+import {setIsAuthTC} from "./state/auth-reducer";
+import {logOutTC} from "./state/login-reducer";
 
 export type FilterType='all' | 'active' | 'completed'
 export type TodoListTitleType = {
@@ -43,12 +43,19 @@ export type TodolistTasksType={
 function App() {
 
     let status=useSelector<AppRootState,string>((state)=>state.app.status)
-    let dispatch= useDispatch()
+    let dispatch= useDispatch<AppDispatchType>()
     let isInitialised=useSelector<AppRootState,boolean>((state)=>state.app.isInitialized)
+    let isAuth=useSelector<AppRootState,boolean>((state)=>state.auth.isAuth)
+
+
 
     useEffect(() => {
-        dispatch()
+        dispatch(setIsAuthTC())
     }, []);
+
+    const logOutHandler=useCallback(()=>{
+        dispatch(logOutTC())
+    },[])
 
     if (!isInitialised) return <CircularProgress color="secondary"/>
     else return (
@@ -70,7 +77,9 @@ function App() {
                             <Typography variant="h6" component="div" sx={{flexGrow: 1}}>
                                 News
                             </Typography>
-                            <Button color="inherit">Login</Button>
+                            <Button color="inherit" onClick={logOutHandler}>{isAuth&&<span>LOGOUT</span>}</Button>
+
+
                         </Toolbar>
                         {status === 'loading' && <LinearProgress/>}
                     </AppBar>
