@@ -1,12 +1,12 @@
-import React, {ChangeEvent, useCallback, useEffect} from "react";
-import {FilterType, TodolistTasksType, TodoListTitleType} from "./App";
+import React, {ChangeEvent, useCallback} from "react";
+import {TodolistTasksType, TodoListTitleType} from "./App";
 import './App.css'
 import {CommonInput} from "./CommonInput";
 import {EditSpan} from "./EditSpan";
 import {Button, CircularProgress} from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import {useDispatch, useSelector} from "react-redux";
-import {AppRootState} from "./state/store";
+import {AppDispatchType, AppRootState} from "./state/store";
 import {
     ChangeFilterTdAC,
     DeleteTodolistsTC,
@@ -15,14 +15,11 @@ import {
 import {
     AddTasksTC,
     DeleteTasksTC,
-    SetTasksTC, UpdateTasksStatusTC, UpdateTasksTC
+    UpdateTasksStatusTC,
+    UpdateTasksTC
 } from "./state/tasks-reducer";
 import {Task} from "./Task";
 import {TaskStatuses} from "./api/todolistsAPI";
-
-
-
-
 
 
 type TodolistPropsType={
@@ -31,12 +28,9 @@ type TodolistPropsType={
 
 export const Todolist = React.memo((props:TodolistPropsType) => {
 
-    let dispatch=useDispatch()
-    let disabled=props.todolist.entityStatus==='loading'
+    let dispatch=useDispatch<AppDispatchType>()
 
-    useEffect(()=>{
-        dispatch(SetTasksTC(props.todolist.id) as any)
-    },[])
+    let disabled=props.todolist.entityStatus==='loading'
 
     let tasks=useSelector<AppRootState, TodolistTasksType>((state)=>state.tasks)
 
@@ -49,16 +43,17 @@ export const Todolist = React.memo((props:TodolistPropsType) => {
         tasksForTodolist=tasks[props.todolist.id].filter(t=> !t.status);
     }
 
+
         const onChangeAllFilter =useCallback( () => {
-            dispatch(ChangeFilterTdAC(props.todolist.id,'all'))
+            dispatch(ChangeFilterTdAC({id:props.todolist.id,value:'all'}))
         }, [props.todolist.id])
 
         const onChangeActiveFilter =useCallback( () => {
-            dispatch(ChangeFilterTdAC(props.todolist.id,'active'))
+            dispatch(ChangeFilterTdAC({id:props.todolist.id,value:'active'}))
         }, [props.todolist.id])
 
         const onChangeCompletedFilter = useCallback( ()=> {
-            dispatch(ChangeFilterTdAC(props.todolist.id,'completed'))
+            dispatch(ChangeFilterTdAC({id:props.todolist.id,value:'completed'}))
         }, [props.todolist.id])
 
         const onDeleteHandler=()=>{
@@ -90,9 +85,6 @@ export const Todolist = React.memo((props:TodolistPropsType) => {
 
 
 
-
-
-
     return (
         <div>
             <h3>
@@ -104,7 +96,10 @@ export const Todolist = React.memo((props:TodolistPropsType) => {
             <CommonInput disabled={disabled} label={'New task'} addItem={addTask}/>
             <ul>
                 {props.todolist.entityStatus==='loading' && <CircularProgress color="secondary"/>}
+
                 {tasksForTodolist.map((s) => {
+
+
 
                     return <Task removeTaskHandler={removeTaskHandler}
                                  changeChackedHandler={changeChackedHandler}
