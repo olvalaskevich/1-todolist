@@ -19,7 +19,7 @@ export function ErrorUtil() {
     return (
         <Snackbar open={open!==null} autoHideDuration={5000} onClose={handleClose}>
         <Stack sx={{ width: '100%' }} style={{alignItems:'center'}}>
-            <Alert severity="warning" onClose={() => {dispatch(appErrorAC(null))}}>
+            <Alert severity="warning" onClose={() => {dispatch(appErrorAC({error:null}))}}>
                 {open}
             </Alert>
 
