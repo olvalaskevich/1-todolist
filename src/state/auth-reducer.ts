@@ -10,8 +10,7 @@ export type DataAuthResponseType={
     login: string
 }
 
-export type AuthActionsType=ReturnType<typeof setIsAuthAC> |
-    ReturnType<typeof isAuthAC>
+export type AuthActionsType=ReturnType<typeof setIsAuthAC>
 
 let initialState={
     isAuth:false
@@ -24,15 +23,15 @@ const slice=createSlice({
         setIsAuthAC (state, action:PayloadAction<{isAuth:boolean}>){
 
             state.isAuth=action.payload.isAuth
-        },
-        isAuthAC (state, action:PayloadAction<{isAuth:boolean}>){
-            state.isAuth=action.payload.isAuth
         }
+        // isAuthAC (state, action:PayloadAction<{isAuth:boolean}>){
+        //     state.isAuth=action.payload.isAuth
+        // }
     }
 })
 export const authReducer=slice.reducer
 export const setIsAuthAC=slice.actions.setIsAuthAC
-export const isAuthAC=slice.actions.isAuthAC
+// export const isAuthAC=slice.actions.isAuthAC
 // export const authReducer=(state:AuthStateType=initialState, action:AuthActionsType)=>{
 //     switch (action.type) {
 //         case 'SET-IS-AUTH':
@@ -56,7 +55,7 @@ export const setIsAuthTC=()=>{
     return (dispatch:Dispatch) => {
         authAPI.setIsAuth()
             .then((res) => {
-                dispatch(setIsInitialisedAC(true))
+                dispatch(setIsInitialisedAC({isInitialized:true}))
                 if (res.data.resultCode === 0) {
                     dispatch(setIsAuthAC({isAuth:true}))
                 } else {
