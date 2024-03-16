@@ -1,9 +1,9 @@
 import {AppActionsTypes} from "./store";
 import {authAPI, LoginDataType} from "../api/todolistsAPI";
-import {appErrorAC, appStatusAC, setIsInitialisedAC} from "./app-reducer";
-import {isAuthAC} from "./auth-reducer";
+import {appErrorAC, appStatusAC} from "./app-reducer"
 import {ClearTodolistsLogOutAC} from "./todolists-reducer";
 import {ClearTasksLogOutAC} from "./tasks-reducer";
+import {setIsAuthAC} from "./auth-reducer";
 
 
 type LoginStateType={
@@ -34,16 +34,16 @@ export const setLoginAC=(data: { userId:number|null })=>{
 export const setLoginTC=(values:LoginDataType):AppActionsTypes=>{
 
     return (dispatch) => {
-        dispatch(appStatusAC('loading'))
+        dispatch(appStatusAC({status:'loading'}))
         authAPI.setLogin(values)
             .then((res) => {
                 if (res.data.resultCode === 0) {
-                    dispatch(appStatusAC('success'))
+                    dispatch(appStatusAC({status:'success'}))
                     // dispatch(setLoginAC(res.data.data))
-                    dispatch(isAuthAC(true))
+                    dispatch(setIsAuthAC({isAuth:true}))
                 } else {
-                    dispatch(appStatusAC('idle'))
-                    dispatch(appErrorAC(res.data.messages[0]))
+                    dispatch(appStatusAC({status:'idle'}))
+                    dispatch(appErrorAC({error:res.data.messages[0]}))
                 }
             })
 
@@ -52,13 +52,13 @@ export const setLoginTC=(values:LoginDataType):AppActionsTypes=>{
 
 export const logOutTC=():AppActionsTypes=>{
     return (dispatch)=>{
-        dispatch(appStatusAC('loading'))
+        dispatch(appStatusAC({status:'loading'}))
         authAPI.logOut()
             .then((res)=>{
-                dispatch(isAuthAC(false))
-                dispatch(ClearTodolistsLogOutAC())
-                dispatch(ClearTasksLogOutAC())
-                dispatch(appStatusAC('success'))
+                dispatch(setIsAuthAC({isAuth:false}))
+                dispatch(ClearTodolistsLogOutAC({}))
+                dispatch(ClearTasksLogOutAC({}))
+                dispatch(appStatusAC({status:'success'}))
             })
     }
 
