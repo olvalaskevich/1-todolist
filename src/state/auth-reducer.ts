@@ -1,8 +1,10 @@
-import {setIsInitialisedAC} from "./app-reducer";
+import {appErrorAC, appStatusAC, setIsInitialisedAC} from "./app-reducer";
 import {AppActionsTypes} from "./store";
-import {authAPI} from "../api/todolistsAPI";
+import {authAPI, LoginDataType} from "../api/todolistsAPI";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {Dispatch} from "redux";
+import {ClearTodolistsLogOutAC} from "./todolists-reducer";
+import {ClearTasksLogOutAC} from "./tasks-reducer";
 
 export type DataAuthResponseType={
     id: number|null
@@ -50,7 +52,6 @@ export const setIsAuthAC=slice.actions.setIsAuthAC
 //     return ({type:'IS-AUTH',isAuth: isAuth} as const)
 // }
 
-
 export const setIsAuthTC=()=>{
     return (dispatch:Dispatch) => {
         authAPI.setIsAuth()
@@ -64,4 +65,34 @@ export const setIsAuthTC=()=>{
 
             })
     }
+}
+export const setLoginTC=(values:LoginDataType):AppActionsTypes=>{
+    return (dispatch) => {
+        dispatch(appStatusAC({status:'loading'}))
+        authAPI.setLogin(values)
+            .then((res) => {
+                if (res.data.resultCode === 0) {
+                    dispatch(appStatusAC({status:'success'}))
+                    // dispatch(setLoginAC(res.data.data))
+                    dispatch(setIsAuthAC({isAuth:true}))
+                } else {
+                    dispatch(appStatusAC({status:'idle'}))
+                    dispatch(appErrorAC({error:res.data.messages[0]}))
+                }
+            })
+
+    }
+}
+export const logOutTC=():AppActionsTypes=>{
+    return (dispatch)=>{
+        dispatch(appStatusAC({status:'loading'}))
+        authAPI.logOut()
+            .then((res)=>{
+                dispatch(setIsAuthAC({isAuth:false}))
+                dispatch(ClearTodolistsLogOutAC({}))
+                dispatch(ClearTasksLogOutAC({}))
+                dispatch(appStatusAC({status:'success'}))
+            })
+    }
+
 }
