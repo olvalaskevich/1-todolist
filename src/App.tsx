@@ -22,8 +22,7 @@ import {ErrorUtil} from "./error-util";
 import {Todolists} from "./Todolists";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import {Login} from "./Login";
-import {setIsAuthTC} from "./state/auth-reducer";
-import {logOutTC} from "./state/login-reducer";
+import {logOutTC, setIsAuthTC} from "./state/auth-reducer";
 
 export type FilterType='all' | 'active' | 'completed'
 export type TodoListTitleType = {
