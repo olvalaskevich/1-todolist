@@ -62,7 +62,7 @@ export const Todolist = React.memo((props:TodolistPropsType) => {
         }
 
         const addTask=useCallback((value:string)=>{
-            dispatch(AddTasksTC(props.todolist.id, value) as any)
+            dispatch(AddTasksTC({idTd:props.todolist.id, title:value}) as any)
         }, [props.todolist.id])
 
         const changeToDoListEditSpan=useCallback((value:string)=>{
@@ -70,7 +70,7 @@ export const Todolist = React.memo((props:TodolistPropsType) => {
         }, [props.todolist.id])
 
     const removeTaskHandler=useCallback((taskId:string)=>{
-        dispatch(DeleteTasksTC(props.todolist.id,taskId) as any)
+        dispatch(DeleteTasksTC({idTd:props.todolist.id, idTask:taskId}) as any)
     }, [props.todolist.id])
 
     const changeChackedHandler=useCallback((event:ChangeEvent<HTMLInputElement>, taskId:string)=>{
