@@ -80,7 +80,7 @@ export const Todolist = React.memo((props:TodolistPropsType) => {
     },[props.todolist.id])
 
     const changeEditSpan=useCallback((value:string, taskId:string)=>{
-        dispatch(UpdateTasksTC(props.todolist.id, taskId, value) as any)
+        dispatch(UpdateTasksTC({idTd:props.todolist.id, idTask:taskId, value}) as any)
     },[props.todolist.id])
 
 
