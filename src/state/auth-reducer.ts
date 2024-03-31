@@ -1,10 +1,10 @@
 import {appErrorAC, appStatusAC, setIsInitialisedAC} from "./app-reducer";
 import {AppActionsTypes} from "./store";
 import {authAPI, LoginDataType} from "../api/todolistsAPI";
-import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {Dispatch} from "redux";
+import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {ClearTodolistsLogOutAC} from "./todolists-reducer";
 import {ClearTasksLogOutAC} from "./tasks-reducer";
+import {handleError, handleErrorOrigin} from "./handleError";
 
 export type DataAuthResponseType={
     id: number|null
@@ -17,6 +17,53 @@ export type AuthActionsType=ReturnType<typeof setIsAuthAC>
 let initialState={
     isAuth:false
 }
+export const setIsAuthTC=createAsyncThunk('auth/setIsAuthTC', async (param, thunkAPI)=>{
+    try{
+        const res= await authAPI.setIsAuth()
+        thunkAPI.dispatch(setIsInitialisedAC({isInitialized:true}))
+        if (res.data.resultCode === 0) {
+            return;
+        } else {
+           handleErrorOrigin(res.data.messages[0], thunkAPI.dispatch)
+           return thunkAPI.rejectWithValue(null)
+        }
+    }
+    catch (err){
+        handleError(err, thunkAPI.dispatch)
+        return thunkAPI.rejectWithValue(null)
+    }
+})
+
+export const setLoginTC=createAsyncThunk('auth/setLoginTC', async (values:LoginDataType, thunkAPI)=>{
+    thunkAPI.dispatch(appStatusAC({status:'loading'}))
+    try{
+        const res=await authAPI.setLogin(values)
+        if (res.data.resultCode === 0) {
+            thunkAPI.dispatch(appStatusAC({status:'success'}))
+            return;
+        } else {
+            thunkAPI.dispatch(appStatusAC({status:'idle'}))
+            handleErrorOrigin(res.data.messages[0], thunkAPI.dispatch)
+            return thunkAPI.rejectWithValue(null)
+        }
+    }
+    catch (err){handleError(err,thunkAPI.dispatch)}
+})
+
+export const logOutTC=createAsyncThunk('auth/logOutTC', async (param, thunkAPI)=>{
+    thunkAPI.dispatch(appStatusAC({status:'loading'}))
+    try{
+        await authAPI.logOut()
+        thunkAPI.dispatch(ClearTodolistsLogOutAC({}))
+        thunkAPI.dispatch(ClearTasksLogOutAC({}))
+        thunkAPI.dispatch(appStatusAC({status:'success'}))
+        return false;
+    }
+    catch (err){
+        handleError(err, thunkAPI.dispatch)
+    }
+
+})
 
 const slice=createSlice({
     name:'auth',
@@ -29,6 +76,17 @@ const slice=createSlice({
         // isAuthAC (state, action:PayloadAction<{isAuth:boolean}>){
         //     state.isAuth=action.payload.isAuth
         // }
+    },
+    extraReducers:(builder)=>{
+        builder.addCase(setIsAuthTC.fulfilled, (state, action)=>{
+            state.isAuth=true
+        });
+        builder.addCase(setLoginTC.fulfilled,(state, action)=>{
+            state.isAuth=true
+        });
+        builder.addCase(logOutTC.fulfilled,(state, action)=>{
+            state.isAuth=false
+        });
     }
 })
 export const authReducer=slice.reducer
@@ -52,47 +110,5 @@ export const setIsAuthAC=slice.actions.setIsAuthAC
 //     return ({type:'IS-AUTH',isAuth: isAuth} as const)
 // }
 
-export const setIsAuthTC=()=>{
-    return (dispatch:Dispatch) => {
-        authAPI.setIsAuth()
-            .then((res) => {
-                dispatch(setIsInitialisedAC({isInitialized:true}))
-                if (res.data.resultCode === 0) {
-                    dispatch(setIsAuthAC({isAuth:true}))
-                } else {
-                    dispatch(setIsAuthAC({isAuth:true}))
-                }
 
-            })
-    }
-}
-export const setLoginTC=(values:LoginDataType):AppActionsTypes=>{
-    return (dispatch) => {
-        dispatch(appStatusAC({status:'loading'}))
-        authAPI.setLogin(values)
-            .then((res) => {
-                if (res.data.resultCode === 0) {
-                    dispatch(appStatusAC({status:'success'}))
-                    // dispatch(setLoginAC(res.data.data))
-                    dispatch(setIsAuthAC({isAuth:true}))
-                } else {
-                    dispatch(appStatusAC({status:'idle'}))
-                    dispatch(appErrorAC({error:res.data.messages[0]}))
-                }
-            })
 
-    }
-}
-export const logOutTC=():AppActionsTypes=>{
-    return (dispatch)=>{
-        dispatch(appStatusAC({status:'loading'}))
-        authAPI.logOut()
-            .then((res)=>{
-                dispatch(setIsAuthAC({isAuth:false}))
-                dispatch(ClearTodolistsLogOutAC({}))
-                dispatch(ClearTasksLogOutAC({}))
-                dispatch(appStatusAC({status:'success'}))
-            })
-    }
-
-}
