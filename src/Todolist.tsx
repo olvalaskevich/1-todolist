@@ -76,14 +76,12 @@ export const Todolist = React.memo((props:TodolistPropsType) => {
     const changeChackedHandler=useCallback((event:ChangeEvent<HTMLInputElement>, taskId:string)=>{
 
         let status=event.currentTarget.checked? TaskStatuses.Completed:TaskStatuses.New
-        dispatch(UpdateTasksStatusTC(props.todolist.id, taskId, status) as any)
+        dispatch(UpdateTasksStatusTC({idTd:props.todolist.id, idTask:taskId, status}) as any)
     },[props.todolist.id])
 
     const changeEditSpan=useCallback((value:string, taskId:string)=>{
         dispatch(UpdateTasksTC({idTd:props.todolist.id, idTask:taskId, value}) as any)
     },[props.todolist.id])
-
-
 
     return (
         <div>
