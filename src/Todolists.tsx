@@ -21,7 +21,7 @@ export const Todolists=React.memo(()=>{
 
     const addItem=useCallback((item:string)=>{
         // let action=AddTdAC(item)
-        dispatch(CreateTodolistsTC(item) as any)
+        dispatch(CreateTodolistsTC({title:item}) as any)
     }, [dispatch])
 
     useEffect(()=>{
