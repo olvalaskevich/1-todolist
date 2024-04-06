@@ -1,21 +1,15 @@
 import {TodolistTasksType} from "../App";
 import {
-    AddTdAC,
-    AddTODOLISTActionType,
-    ChangeStatusTodolistAC, RemoveTdAC,
-    RemoveTODOLISTActionType, SetTodolistsAC,
+    ChangeStatusTodolistAC, CreateTodolistsTC, DeleteTodolistsTC, SetTodolistsAC,
     SetTodolistsActionType
 } from "./todolists-reducer";
 import {TasksType, todolistsAPI} from "../api/todolistsAPI";
-import {AppActionsTypes, AppRootState} from "./store";
-import {appErrorAC} from "./app-reducer";
+import {AppRootState} from "./store";
 import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {handleError, handleErrorOrigin} from "./handleError";
 
 export type TasksReducerActionType=ReturnType<typeof RemoveTaskAC>|
      ReturnType<typeof AddTaskAC>|
-     AddTODOLISTActionType |
-     RemoveTODOLISTActionType |
      SetTodolistsActionType |
      ReturnType<typeof ClearTasksLogOutAC>
 
@@ -157,10 +151,10 @@ const slice=createSlice({
         builder.addCase(SetTodolistsAC, (state,action)=>{
             action.payload.td.forEach((tl:any)=>state[tl.id]=[])
         });
-        builder.addCase(AddTdAC, (state,action)=>{
+        builder.addCase(CreateTodolistsTC.fulfilled, (state,action)=>{
             state[action.payload.td.id]=[]
         });
-        builder.addCase(RemoveTdAC, (state,action)=>{
+        builder.addCase(DeleteTodolistsTC.fulfilled, (state,action)=>{
             delete state[action.payload.id]
         });
         builder.addCase(SetTasksTC.fulfilled, (state, action)=> {
