@@ -58,7 +58,7 @@ export const Todolist = React.memo((props:TodolistPropsType) => {
 
         const onDeleteHandler=()=>{
             // let action=RemoveTdAC(props.id)
-            dispatch(DeleteTodolistsTC(props.todolist.id) as any)
+            dispatch(DeleteTodolistsTC({idTd:props.todolist.id}) as any)
         }
 
         const addTask=useCallback((value:string)=>{
@@ -66,7 +66,7 @@ export const Todolist = React.memo((props:TodolistPropsType) => {
         }, [props.todolist.id])
 
         const changeToDoListEditSpan=useCallback((value:string)=>{
-            dispatch(UpdateTodolistsTC(props.todolist.id,value) as any)
+            dispatch(UpdateTodolistsTC({idTd:props.todolist.id,title:value}) as any)
         }, [props.todolist.id])
 
     const removeTaskHandler=useCallback((taskId:string)=>{
