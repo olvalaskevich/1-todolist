@@ -1,10 +1,7 @@
-import {appErrorAC, appStatusAC, setIsInitialisedAC} from "./app-reducer";
-import {AppActionsTypes} from "./store";
+import {appStatusAC, setIsInitialisedAC} from "./app-reducer";
 import {authAPI, LoginDataType} from "../api/todolistsAPI";
 import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {ClearTodolistsLogOutAC} from "./todolists-reducer";
-import {ClearTasksLogOutAC} from "./tasks-reducer";
-import {handleError, handleErrorOrigin} from "./handleError";
+import {handleError} from "./handleError";
 
 export type DataAuthResponseType={
     id: number|null
@@ -24,7 +21,7 @@ export const setIsAuthTC=createAsyncThunk('auth/setIsAuthTC', async (param, thun
         if (res.data.resultCode === 0) {
             return;
         } else {
-           handleErrorOrigin(res.data.messages[0], thunkAPI.dispatch)
+            handleError(res.data.messages[0], thunkAPI.dispatch)
            return thunkAPI.rejectWithValue(null)
         }
     }
@@ -43,7 +40,7 @@ export const setLoginTC=createAsyncThunk('auth/setLoginTC', async (values:LoginD
             return;
         } else {
             thunkAPI.dispatch(appStatusAC({status:'idle'}))
-            handleErrorOrigin(res.data.messages[0], thunkAPI.dispatch)
+            handleError(res.data.messages[0], thunkAPI.dispatch)
             return thunkAPI.rejectWithValue(null)
         }
     }
@@ -54,8 +51,6 @@ export const logOutTC=createAsyncThunk('auth/logOutTC', async (param, thunkAPI)=
     thunkAPI.dispatch(appStatusAC({status:'loading'}))
     try{
         await authAPI.logOut()
-        thunkAPI.dispatch(ClearTodolistsLogOutAC({}))
-        thunkAPI.dispatch(ClearTasksLogOutAC({}))
         thunkAPI.dispatch(appStatusAC({status:'success'}))
         return false;
     }
