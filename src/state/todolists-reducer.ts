@@ -3,7 +3,8 @@ import {todolistsAPI, TodolistType} from "../api/todolistsAPI";
 import {appStatusAC, statusType} from "./app-reducer";
 import {SetTasksTC} from "./tasks-reducer";
 import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {handleError, handleErrorOrigin} from "./handleError";
+import {handleError} from "./handleError";
+import {logOutTC} from "./auth-reducer";
 
 
 // export type RemoveTODOLISTActionType={
@@ -24,8 +25,7 @@ export type SetTodolistsActionType={
 export type TasksActionType =
     ReturnType<typeof ChangeFilterTdAC> |
     SetTodolistsActionType |
-    ReturnType<typeof ChangeStatusTodolistAC> |
-    ReturnType<typeof ClearTodolistsLogOutAC>
+    ReturnType<typeof ChangeStatusTodolistAC>
 
 const initialState:Array<TodoListTitleType>=[]
 
@@ -51,7 +51,7 @@ export const CreateTodolistsTC=createAsyncThunk('todolists/createTodolistsTC', a
         }
         else {
             thunkAPI.dispatch(appStatusAC({status:'idle'}))
-            handleErrorOrigin(res.data.messages[0], thunkAPI.dispatch)
+            handleError(res.data.messages[0], thunkAPI.dispatch)
             return thunkAPI.rejectWithValue(null)
         }
     }
@@ -82,7 +82,7 @@ export const UpdateTodolistsTC=createAsyncThunk('todolists/updateTodolistsTC', a
         }
         else {
             thunkAPI.dispatch(ChangeStatusTodolistAC({idTd:param.idTd, statusTd:'success'}))
-            handleErrorOrigin(res.data.messages[0], thunkAPI.dispatch)
+            handleError(res.data.messages[0], thunkAPI.dispatch)
             return thunkAPI.rejectWithValue(null)
         }
     }
@@ -120,9 +120,9 @@ const slice=createSlice({
             if (tdl)
                 tdl.entityStatus=action.payload.statusTd
         },
-        ClearTodolistsLogOutAC(state, action:PayloadAction<{}>) {
-            return []
-        }
+        // ClearTodolistsLogOutAC(state, action:PayloadAction<{}>) {
+        //     return []
+        // }
     },
     extraReducers:(builder)=>{
         builder.addCase(CreateTodolistsTC.fulfilled, (state, action)=>{
@@ -136,12 +136,14 @@ const slice=createSlice({
             if (tdl)
                 tdl.title=action.payload.value
         });
-
+        builder.addCase(logOutTC.fulfilled, (state, action)=>{
+            return []
+        });
     }
 })
 export const todolistReducer=slice.reducer
 export const {ChangeFilterTdAC, SetTodolistsAC,
-    ChangeStatusTodolistAC,ClearTodolistsLogOutAC}=slice.actions
+    ChangeStatusTodolistAC}=slice.actions
 // export const todolistReducer= (state:Array<TodoListTitleType>=initialState, action:TasksActionType)=>{
 //         switch (action.type){
 //             case 'SET-TODOLISTS':

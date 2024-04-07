@@ -6,12 +6,12 @@ import {
 import {TasksType, todolistsAPI} from "../api/todolistsAPI";
 import {AppRootState} from "./store";
 import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {handleError, handleErrorOrigin} from "./handleError";
+import {handleError} from "./handleError";
+import {logOutTC} from "./auth-reducer";
 
 export type TasksReducerActionType=ReturnType<typeof RemoveTaskAC>|
      ReturnType<typeof AddTaskAC>|
-     SetTodolistsActionType |
-     ReturnType<typeof ClearTasksLogOutAC>
+     SetTodolistsActionType
 
 const initialState:TodolistTasksType= {}
 
@@ -19,7 +19,7 @@ export const SetTasksTC = createAsyncThunk('tasks/setTasksTC', async (idTd: stri
     thunkAPI.dispatch(ChangeStatusTodolistAC({idTd: idTd, statusTd: 'loading'}))
     const res = await todolistsAPI.getTasks(idTd)
     if (res.data.error) {
-        handleErrorOrigin(res.data.error, thunkAPI.dispatch)
+        handleError(res.data.error, thunkAPI.dispatch)
         return thunkAPI.rejectWithValue(null)
     } else {
         thunkAPI.dispatch(ChangeStatusTodolistAC({idTd: idTd, statusTd: 'success'}))
@@ -143,9 +143,9 @@ const slice=createSlice({
         // SetTasksAC(state, action:PayloadAction<{todolistId:string, tasks:Array<TasksType>}>) {
         //     state[action.payload.todolistId]=action.payload.tasks
         // },
-        ClearTasksLogOutAC(state, action:PayloadAction<{}>) {
-            return {}
-        }
+        // ClearTasksLogOutAC(state, action:PayloadAction<{}>) {
+        //     return {}
+        // }
     },
     extraReducers:(builder)=>{
         builder.addCase(SetTodolistsAC, (state,action)=>{
@@ -182,11 +182,13 @@ const slice=createSlice({
             if (index>-1)
                 tasks[index].status=action.payload.model.status
         });
+        builder.addCase(logOutTC.fulfilled, (state, action)=> {
+            return {}
+        });
     }
 })
 export const tasksReducer=slice.reducer
-export const {RemoveTaskAC, AddTaskAC,
-    ClearTasksLogOutAC}=slice.actions
+export const {RemoveTaskAC, AddTaskAC}=slice.actions
 // export const tasksReducer=(state:TodolistTasksType=initialState, action:any)=>{
 //     switch (action.type){
 //         case SetTodolistsAC.type:{
