@@ -1,14 +1,13 @@
 import {Grid, Paper} from "@mui/material";
-import {Todolist} from "./Todolist";
-import React, {useCallback, useEffect, useMemo} from "react";
-import {CommonInput} from "./CommonInput";
+import {Todolist} from "./Todolist/Todolist";
+import React, {useCallback, useEffect} from "react";
+import {CommonInput} from "../../components/CommonInput";
 import {useDispatch, useSelector} from "react-redux";
-import {AppDispatchType, AppRootState} from "./state/store";
-import {TodoListTitleType} from "./App";
-import {CreateTodolistsTC, GetTodolistsTC} from "./state/todolists-reducer";
+import {AppDispatchType, AppRootState} from "../../app/store";
+import {TodoListTitleType} from "../../app/App";
+import {CreateTodolistsTC, GetTodolistsTC} from "./Todolist/todolists-reducer";
 import {Navigate} from "react-router-dom";
-import {setIsAuthTC} from "./state/auth-reducer";
-
+import {AuthSelectors} from "../Auth";
 
 
 export const Todolists=React.memo(()=>{
@@ -16,7 +15,7 @@ export const Todolists=React.memo(()=>{
     let dispatch= useDispatch<AppDispatchType>()
     let todolists=useSelector<AppRootState, Array<TodoListTitleType>>((state)=>state.todolists)
 
-    let isAuth=useSelector<AppRootState,boolean>((state)=>state.auth.isAuth)
+    let isAuth=useSelector(AuthSelectors.authSelector)
 
 
     const addItem=useCallback((item:string)=>{

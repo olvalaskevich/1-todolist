@@ -1,7 +1,5 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import './App.css';
-import {Todolist} from "./Todolist";
-import {CommonInput} from "./CommonInput";
 import {
     AppBar,
     Box,
@@ -15,14 +13,16 @@ import {
 } from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
 import {useDispatch, useSelector} from "react-redux";
-import {AppDispatchType, AppRootState} from "./state/store";
-import {TasksType} from "./api/todolistsAPI";
-import {statusType} from "./state/app-reducer";
-import {ErrorUtil} from "./error-util";
-import {Todolists} from "./Todolists";
+import {AppDispatchType, AppRootState} from "./store";
+import {TasksType} from "../api/todolistsAPI";
+import {statusType} from "./app-reducer";
+import {ErrorUtil} from "../utils/error-util";
+import {Todolists} from "../features/TodolistsList/Todolists";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
-import {Login} from "./Login";
-import {logOutTC, setIsAuthTC} from "./state/auth-reducer";
+import {Login} from "../features/Auth/Login";
+import {logOutTC, setIsAuthTC} from "../features/Auth/auth-reducer";
+import {AppSelectors} from "./index";
+import {AuthSelectors} from "../features/Auth";
 
 export type FilterType='all' | 'active' | 'completed'
 export type TodoListTitleType = {
@@ -41,10 +41,10 @@ export type TodolistTasksType={
 
 function App() {
 
-    let status=useSelector<AppRootState,string>((state)=>state.app.status)
+    let status=useSelector(AppSelectors.statusSelector)
     let dispatch= useDispatch<AppDispatchType>()
-    let isInitialised=useSelector<AppRootState,boolean>((state)=>state.app.isInitialized)
-    let isAuth=useSelector<AppRootState,boolean>((state)=>state.auth.isAuth)
+    let isInitialised=useSelector(AppSelectors.initSelector)
+    let isAuth=useSelector(AuthSelectors.authSelector)
 
 
 

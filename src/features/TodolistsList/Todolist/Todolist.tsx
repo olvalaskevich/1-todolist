@@ -1,25 +1,26 @@
 import React, {ChangeEvent, useCallback} from "react";
-import {TodolistTasksType, TodoListTitleType} from "./App";
-import './App.css'
-import {CommonInput} from "./CommonInput";
-import {EditSpan} from "./EditSpan";
+import {TodolistTasksType, TodoListTitleType} from "../../../app/App";
+import '../../../app/App.css'
+import {CommonInput} from "../../../components/CommonInput";
+import {EditSpan} from "../../../components/EditSpan";
 import {Button, CircularProgress} from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import {useDispatch, useSelector} from "react-redux";
-import {AppDispatchType, AppRootState} from "./state/store";
+import {AppDispatchType, AppRootState} from "../../../app/store";
 import {
     ChangeFilterTdAC,
     DeleteTodolistsTC,
     UpdateTodolistsTC
-} from "./state/todolists-reducer";
+} from "./todolists-reducer";
 import {
     AddTasksTC,
     DeleteTasksTC,
     UpdateTasksStatusTC,
     UpdateTasksTC
-} from "./state/tasks-reducer";
-import {Task} from "./Task";
-import {TaskStatuses} from "./api/todolistsAPI";
+} from "./tasks-reducer";
+import {Task} from "./Task/Task";
+import {TaskStatuses} from "../../../api/todolistsAPI";
+import {TodolistSelectors} from "./index";
 
 
 type TodolistPropsType={
@@ -32,7 +33,7 @@ export const Todolist = React.memo((props:TodolistPropsType) => {
 
     let disabled=props.todolist.entityStatus==='loading'
 
-    let tasks=useSelector<AppRootState, TodolistTasksType>((state)=>state.tasks)
+    let tasks=useSelector(TodolistSelectors.tasksSelector)
 
     let tasksForTodolist=tasks[props.todolist.id];
 
