@@ -1,10 +1,7 @@
 import {v1} from "uuid";
-import {TodoListTitleType} from "../App";
+import {TodoListTitleType} from "../../../app/App";
 import {
-    AddTdAC,
     ChangeFilterTdAC,
-    ChangeTitleTdAC,
-    RemoveTdAC,
     SetTodolistsAC,
     todolistReducer
 } from "./todolists-reducer";

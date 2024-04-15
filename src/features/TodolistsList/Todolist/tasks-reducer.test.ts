@@ -1,6 +1,6 @@
 import {v1} from "uuid";
-import {TodolistTasksType} from "../App";
-import {AddTaskAC, ChangeCheckedAC, ChangeTitleTaskAC, RemoveTaskAC, tasksReducer} from "./tasks-reducer";
+import {TodolistTasksType} from "../../../app/App";
+import {AddTaskAC, RemoveTaskAC, tasksReducer} from "./tasks-reducer";
 
 
 // test ("Task should be removed", ()=> {

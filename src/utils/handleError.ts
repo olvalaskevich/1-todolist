@@ -1,5 +1,5 @@
 import {Dispatch} from "redux";
-import {appErrorAC} from "./app-reducer";
+import {appErrorAC} from "../app/app-reducer";
 import {isAxiosError} from "axios";
 
 

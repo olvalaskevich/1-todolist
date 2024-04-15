@@ -2,7 +2,7 @@ import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
 import {IconButton, TextField} from "@mui/material";
 import {AddOutlined} from "@mui/icons-material";
 import {useSelector} from "react-redux";
-import {AppRootState} from "./state/store";
+import {AppRootState} from "../app/store";
 
 type CommonInputPropsType={
     label:string,

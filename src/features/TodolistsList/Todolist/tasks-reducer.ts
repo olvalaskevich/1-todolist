@@ -1,13 +1,13 @@
-import {TodolistTasksType} from "../App";
+import {TodolistTasksType} from "../../../app/App";
 import {
     ChangeStatusTodolistAC, CreateTodolistsTC, DeleteTodolistsTC, SetTodolistsAC,
     SetTodolistsActionType
 } from "./todolists-reducer";
-import {TasksType, todolistsAPI} from "../api/todolistsAPI";
-import {AppRootState} from "./store";
+import {TasksType, todolistsAPI} from "../../../api/todolistsAPI";
+import {AppRootState} from "../../../app/store";
 import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {handleError} from "./handleError";
-import {logOutTC} from "./auth-reducer";
+import {handleError} from "../../../utils/handleError";
+import {logOutTC} from "../../Auth/auth-reducer";
 
 export type TasksReducerActionType=ReturnType<typeof RemoveTaskAC>|
      ReturnType<typeof AddTaskAC>|
@@ -115,7 +115,14 @@ export const UpdateTasksStatusTC=createAsyncThunk('tasks/updateTasksStatusTC', a
     else {return thunkAPI.rejectWithValue(null)}
 })
 
-const slice=createSlice({
+export const AsyncTasksActions={
+    SetTasksTC,
+    DeleteTasksTC,
+    AddTasksTC,
+    UpdateTasksTC,
+    UpdateTasksStatusTC
+}
+export const slice=createSlice({
     name:'tasks',
     initialState,
     reducers:{

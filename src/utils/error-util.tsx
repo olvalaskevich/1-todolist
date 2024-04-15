@@ -3,8 +3,8 @@ import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
 import Snackbar from '@mui/material/Snackbar';
 import {useDispatch, useSelector} from "react-redux";
-import {AppRootState} from "./state/store";
-import {appErrorAC} from "./state/app-reducer";
+import {AppRootState} from "../app/store";
+import {appErrorAC} from "../app/app-reducer";
 
 
 export function ErrorUtil() {

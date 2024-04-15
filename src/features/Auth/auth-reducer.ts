@@ -1,7 +1,7 @@
-import {appStatusAC, setIsInitialisedAC} from "./app-reducer";
-import {authAPI, LoginDataType} from "../api/todolistsAPI";
+import {appStatusAC, setIsInitialisedAC} from "../../app/app-reducer";
+import {authAPI, LoginDataType} from "../../api/todolistsAPI";
 import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {handleError} from "./handleError";
+import {handleError} from "../../utils/handleError";
 
 export type DataAuthResponseType={
     id: number|null
@@ -59,6 +59,12 @@ export const logOutTC=createAsyncThunk('auth/logOutTC', async (param, thunkAPI)=
     }
 
 })
+
+export const AsyncAuthActions={
+    setIsAuthTC,
+    setLoginTC,
+    logOutTC
+}
 
 const slice=createSlice({
     name:'auth',
