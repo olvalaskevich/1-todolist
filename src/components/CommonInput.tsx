@@ -2,7 +2,7 @@ import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
 import {IconButton, TextField} from "@mui/material";
 import {AddOutlined} from "@mui/icons-material";
 import {useSelector} from "react-redux";
-import {AppRootState} from "../app/store";
+import {AppSelectors} from '../app'
 
 type CommonInputPropsType={
     label:string,
@@ -16,7 +16,7 @@ export const CommonInput = React.memo( (props:CommonInputPropsType) => {
 
     let [newTaskTitle, setNewTaskTitle]=useState('')
     let [error, setError]=useState<string|null>(null)
-    let addTaskError=useSelector<AppRootState, string|null>(state=>state.app.error)
+    let addTaskError=useSelector(AppSelectors.errorSelector)
     const onChangeInputHandler=(event:ChangeEvent<HTMLInputElement>)=>{
         setNewTaskTitle(event.currentTarget.value)
         if (error!==null)
@@ -24,14 +24,16 @@ export const CommonInput = React.memo( (props:CommonInputPropsType) => {
 
     }
 
-    const onClickBtnHandler=()=>{
-        if (newTaskTitle.trim()!==''){
-            props.addItem(newTaskTitle.trim())
-            if (addTaskError===null){
-            setNewTaskTitle('')}
-        }
-        else {setError("Invalid value")}
+    const onClickBtnHandler= ()=>{
+
+    if (newTaskTitle.trim()!==''){
+        props.addItem(newTaskTitle.trim())
+        setNewTaskTitle('')
     }
+    else {setError("Invalid value")}
+}
+
+
 
     const onKeyEnter=(event:KeyboardEvent<HTMLInputElement>)=>{
 
@@ -51,13 +53,16 @@ export const CommonInput = React.memo( (props:CommonInputPropsType) => {
             <TextField error={!!error}
                        id="outlined-basic"
                        label={props.label}
-                       color={'secondary'}
+                       color={'primary'}
                        variant="outlined"
                        onKeyPress={onKeyEnter}
                        onChange={onChangeInputHandler}
                        value={newTaskTitle}
-                       disabled={props.disabled}/>
-            <IconButton disabled={props.disabled} onClick={onClickBtnHandler} color={"secondary"}>
+                       disabled={props.disabled}
+            style={{backgroundColor:'rgb(25,118,210)', borderRadius:'5px', border:'2px solid rgb(17,35,65)'}}
+
+            />
+            <IconButton disabled={props.disabled} onClick={onClickBtnHandler} color={"primary"} style={{border:'2px solid rgb(17,35,65)', margin:'5px'}}>
                 <AddOutlined/>
             </IconButton>
             {error && <div className={'textError'}>Invalid value</div>}
