@@ -5,6 +5,19 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  ::-webkit-scrollbar {
+    height: 15px;
+    width: 10px;
+  };
+  ::-webkit-scrollbar-track {
+    background: rgb(17,35,65);
+  };
+  ::-webkit-scrollbar-thumb {
+    background-color: rgb(25,118,210);
+    border-radius: 5px;
+    border: 5px solid rgb(17,35,65);
+  };
+
 }
 
 code {
