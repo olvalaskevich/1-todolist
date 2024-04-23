@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {DataAuthResponseType} from "../state/auth-reducer";
+import {DataAuthResponseType} from "../features/Auth/auth-reducer";
 
 const instance=axios.create({
     baseURL:'https://social-network.samuraijs.com/api/1.1/',
