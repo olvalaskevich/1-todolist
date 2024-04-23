@@ -31,9 +31,9 @@ export const EditSpan = React.memo( (props:EditSpanPropsType) => {
     return (
         <>
             {onDouble ?
-                <Input disabled={props.disabled} onBlur={onBlurInputHandler} onChange={onChangeInputHandler} value={value} autoFocus color={"secondary"}/>
+                <Input style={{color:'white', width:'145px'}} disabled={props.disabled} onBlur={onBlurInputHandler} onChange={onChangeInputHandler} value={value} autoFocus />
                 :
-                <span onDoubleClick={onDoubleClickHandler}>{props.title}</span>
+                <span onDoubleClick={onDoubleClickHandler} style={{width:'145px', wordBreak:'break-all'}}>{props.title}</span>
             }
         </>
     );
