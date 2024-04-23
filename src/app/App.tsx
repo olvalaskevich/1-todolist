@@ -3,7 +3,8 @@ import './App.css';
 import {
     AppBar,
     Box,
-    Button, CircularProgress,
+    Button,
+    CircularProgress,
     Container,
     Grid,
     IconButton,
@@ -12,17 +13,15 @@ import {
     Typography
 } from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
-import {useDispatch, useSelector} from "react-redux";
-import {AppDispatchType, AppRootState} from "./store";
+import {useSelector} from "react-redux";
+import {useActions} from "./store";
 import {TasksType} from "../api/todolistsAPI";
 import {statusType} from "./app-reducer";
 import {ErrorUtil} from "../utils/error-util";
 import {Todolists} from "../features/TodolistsList/Todolists";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
-import {Login} from "../features/Auth/Login";
-import {logOutTC, setIsAuthTC} from "../features/Auth/auth-reducer";
+import {AuthActions, AuthSelectors, Login} from "../features/Auth";
 import {AppSelectors} from "./index";
-import {AuthSelectors} from "../features/Auth";
 
 export type FilterType='all' | 'active' | 'completed'
 export type TodoListTitleType = {
@@ -42,28 +41,27 @@ export type TodolistTasksType={
 function App() {
 
     let status=useSelector(AppSelectors.statusSelector)
-    let dispatch= useDispatch<AppDispatchType>()
     let isInitialised=useSelector(AppSelectors.initSelector)
     let isAuth=useSelector(AuthSelectors.authSelector)
-
+    let {setIsAuthTC, logOutTC}=useActions(AuthActions)
 
 
     useEffect(() => {
-        dispatch(setIsAuthTC())
+        setIsAuthTC()
     }, []);
 
     const logOutHandler=useCallback(()=>{
-        dispatch(logOutTC())
+        logOutTC()
     },[])
 
-    if (!isInitialised) return <CircularProgress color="secondary"/>
+    if (!isInitialised) return <CircularProgress color="primary"/>
     else return (
 
         <BrowserRouter>
-            <div className="App">
-                <Box sx={{flexGrow: 1}}>
-                    <AppBar position="static">
-                        <Toolbar>
+            <div className="App" style={{height:'100vh', backgroundImage: `url("https://c.wallhere.com/photos/fb/27/1600x900_px_abstract-1526595.jpg!d")`, backgroundSize:'cover'}}>
+                <Box sx={{flexGrow: 1, flexWrap:'nowrap'}} >
+                    <AppBar position="static" >
+                        <Toolbar style={{backgroundColor:'rgb(17,35,65)', justifyContent:'space-between'}}>
                             <IconButton
                                 size="large"
                                 edge="start"
@@ -73,9 +71,7 @@ function App() {
                             >
                                 <MenuIcon/>
                             </IconButton>
-                            <Typography variant="h6" component="div" sx={{flexGrow: 1}}>
-                                News
-                            </Typography>
+
                             <Button color="inherit" onClick={logOutHandler}>{isAuth&&<span>LOGOUT</span>}</Button>
 
 
@@ -83,16 +79,18 @@ function App() {
                         {status === 'loading' && <LinearProgress/>}
                     </AppBar>
                 </Box>
-                <Container fixed>
 
-                    <Grid container spacing={3} style={{paddingTop: '20px'}}>
+                <Container style={{display: 'flex', flexDirection:'column', flexWrap:'nowrap', width:'auto'}}>
+
+
                         <Routes>
                             <Route path={'/'} element={<Todolists/>}/>
                             <Route path={'/login'} element={<Login/>}/>
                         </Routes>
-                    </Grid>
+
 
                 </Container>
+
                 <ErrorUtil/>
             </div>
         </BrowserRouter>
