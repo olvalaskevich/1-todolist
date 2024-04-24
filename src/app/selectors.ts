@@ -1,4 +1,4 @@
-import {AppRootState} from "./store";
+import {AppRootState} from "./types";
 
 
 export const statusSelector=(state:AppRootState)=>state.app.status

@@ -1,10 +1,10 @@
-import {FilterType, TodoListTitleType} from "../../../app/App";
 import {todolistsAPI, TodolistType} from "../../../api/todolistsAPI";
-import {appStatusAC, statusType} from "../../../app/app-reducer";
+import {appStatusAC} from "../../../app/app-reducer";
 import {SetTasksTC} from "./tasks-reducer";
 import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {handleError} from "../../../utils/handleError";
 import {logOutTC} from "../../Auth/auth-reducer";
+import {FilterType, statusType, TodoListTitleType} from "../../../app/types";
 
 
 // export type RemoveTODOLISTActionType={
@@ -17,15 +17,15 @@ import {logOutTC} from "../../Auth/auth-reducer";
 //     td:TodolistType
 // }
 
-export type SetTodolistsActionType={
-    type:'SET-TODOLISTS',
-    todolists:Array<TodolistType>
-
-}
-export type TasksActionType =
-    ReturnType<typeof ChangeFilterTdAC> |
-    SetTodolistsActionType |
-    ReturnType<typeof ChangeStatusTodolistAC>
+// export type SetTodolistsActionType={
+//     type:'SET-TODOLISTS',
+//     todolists:Array<TodolistType>
+//
+// }
+// export type TasksActionType =
+//     ReturnType<typeof ChangeFilterTdAC> |
+//     SetTodolistsActionType |
+//     ReturnType<typeof ChangeStatusTodolistAC>
 
 const initialState:Array<TodoListTitleType>=[]
 
@@ -133,16 +133,13 @@ export const slice=createSlice({
     extraReducers:(builder)=>{
         builder.addCase(CreateTodolistsTC.fulfilled, (state, action)=>{
             state.unshift({...action.payload.td, filter:'all', entityStatus: 'idle'})
-        });
-        builder.addCase(DeleteTodolistsTC.fulfilled, (state, action)=>{
+        }).addCase(DeleteTodolistsTC.fulfilled, (state, action)=>{
             return state.filter((s)=>s.id!==action.payload.id)
-        });
-        builder.addCase(UpdateTodolistsTC.fulfilled, (state, action)=>{
+        }).addCase(UpdateTodolistsTC.fulfilled, (state, action)=>{
             let tdl=state.find((t)=>t.id===action.payload.id)
             if (tdl)
                 tdl.title=action.payload.value
-        });
-        builder.addCase(logOutTC.fulfilled, (state, action)=>{
+        }).addCase(logOutTC.fulfilled, (state, action)=>{
             return []
         });
     }

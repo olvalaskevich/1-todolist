@@ -4,21 +4,18 @@ import {Checkbox, IconButton} from "@mui/material";
 import {EditSpan} from "../../../../components/EditSpan";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-import {TaskStatuses, TasksType} from "../../../../api/todolistsAPI";
+import {TaskStatuses} from "../../../../api/todolistsAPI";
+import {TaskPropsType} from "../types";
 
 
-type TaskPropsType={
-    removeTaskHandler:(taskId:string)=>void
-    changeChackedHandler:(event:ChangeEvent<HTMLInputElement>, taskId:string)=>void
-    changeEditSpan:(value:string, taskId:string)=>void
-    task:TasksType
-    disabled:boolean
-
-}
-
-
-
-
+// type TaskPropsType={
+//     removeTaskHandler:(taskId:string)=>void
+//     changeChackedHandler:(event:ChangeEvent<HTMLInputElement>, taskId:string)=>void
+//     changeEditSpan:(value:string, taskId:string)=>void
+//     task:TasksType
+//     disabled:boolean
+//
+// }
 
 export const Task =React.memo( (props:TaskPropsType) => {
     console.log('span call')

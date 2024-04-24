@@ -1,4 +1,4 @@
-import {AppRootState} from "../../../app/store";
+import {AppRootState} from "../../../app/types";
 
 
 export const tasksSelector=(state:AppRootState)=>state.tasks

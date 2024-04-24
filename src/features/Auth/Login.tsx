@@ -9,19 +9,21 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import {useFormik} from "formik";
 import {useSelector} from "react-redux";
-import {AppRootState, useActions} from "../../app/store";
+import {useActions} from "../../app/store";
 import {Navigate} from "react-router-dom";
 import {AuthActions, AuthSelectors} from "./index";
+import {statusSelector} from "../../app/selectors";
+import {FormikErrorType} from "./types";
 
-type FormikErrorType = {
-    email?: string
-    password?: string
-    rememberMe?: boolean
-}
+// type FormikErrorType = {
+//     email?: string
+//     password?: string
+//     rememberMe?: boolean
+// }
 
 
 export const Login = () => {
-    let status=useSelector<AppRootState,string>((state)=>state.app.status)
+    let status=useSelector(statusSelector)
     let auth=useSelector(AuthSelectors.authSelector)
     let {setLoginTC}=useActions(AuthActions)
 
@@ -75,7 +77,7 @@ export const Login = () => {
 
                     <FormControlLabel label={'Remember me'} control={<Checkbox checked={formik.values.rememberMe} {...formik.getFieldProps('rememberMe')}/>}/>
 
-                    <Button disabled={status==='loading?'} type={'submit'} variant={'contained'} color={'primary'} style={{border:'2px solid rgb(17,35,65)'}}>
+                    <Button disabled={status==='loading'} type={'submit'} variant={'contained'} color={'primary'} style={{border:'2px solid rgb(17,35,65)'}}>
                         Login
                     </Button>
 

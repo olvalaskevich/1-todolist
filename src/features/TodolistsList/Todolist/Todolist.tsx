@@ -1,5 +1,4 @@
 import React, {ChangeEvent, useCallback} from "react";
-import {TodoListTitleType} from "../../../app/App";
 import '../../../app/App.css'
 import {CommonInput} from "../../../components/CommonInput";
 import {EditSpan} from "../../../components/EditSpan";
@@ -10,11 +9,12 @@ import {useActions, useAppDispatch} from "../../../app/store";
 import {Task} from "./Task/Task";
 import {TaskStatuses} from "../../../api/todolistsAPI";
 import {TasksActions, TodolistsActions, TodolistSelectors} from "./index";
+import {TodolistPropsType} from "./types";
 
 
-type TodolistPropsType={
-    todolist:TodoListTitleType
-}
+// type TodolistPropsType={
+//     todolist:TodoListTitleType
+// }
 
 export const Todolist = React.memo((props:TodolistPropsType) => {
 

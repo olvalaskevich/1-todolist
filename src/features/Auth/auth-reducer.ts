@@ -3,13 +3,13 @@ import {authAPI, LoginDataType} from "../../api/todolistsAPI";
 import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {handleError} from "../../utils/handleError";
 
-export type DataAuthResponseType={
-    id: number|null
-    email: string
-    login: string
-}
-
-export type AuthActionsType=ReturnType<typeof setIsAuthAC>
+// export type DataAuthResponseType={
+//     id: number|null
+//     email: string
+//     login: string
+// }
+//
+// export type AuthActionsType=ReturnType<typeof setIsAuthAC>
 
 let initialState={
     isAuth:false
@@ -81,11 +81,9 @@ const slice=createSlice({
     extraReducers:(builder)=>{
         builder.addCase(setIsAuthTC.fulfilled, (state, action)=>{
             state.isAuth=true
-        });
-        builder.addCase(setLoginTC.fulfilled,(state, action)=>{
+        }).addCase(setLoginTC.fulfilled,(state, action)=>{
             state.isAuth=true
-        });
-        builder.addCase(logOutTC.fulfilled,(state, action)=>{
+        }).addCase(logOutTC.fulfilled,(state, action)=>{
             state.isAuth=false
         });
     }

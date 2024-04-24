@@ -1,17 +1,15 @@
-import {TodolistTasksType} from "../../../app/App";
 import {
-    ChangeStatusTodolistAC, CreateTodolistsTC, DeleteTodolistsTC, SetTodolistsAC,
-    SetTodolistsActionType
+    ChangeStatusTodolistAC, CreateTodolistsTC, DeleteTodolistsTC, SetTodolistsAC
 } from "./todolists-reducer";
 import {TasksType, todolistsAPI} from "../../../api/todolistsAPI";
-import {AppRootState} from "../../../app/store";
 import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {handleError} from "../../../utils/handleError";
 import {logOutTC} from "../../Auth/auth-reducer";
+import {AppRootState, TodolistTasksType} from "../../../app/types";
 
-export type TasksReducerActionType=ReturnType<typeof RemoveTaskAC>|
-     ReturnType<typeof AddTaskAC>|
-     SetTodolistsActionType
+// export type TasksReducerActionType=ReturnType<typeof RemoveTaskAC>|
+//      ReturnType<typeof AddTaskAC>|
+//      SetTodolistsActionType
 
 const initialState:TodolistTasksType= {}
 
@@ -157,39 +155,31 @@ export const slice=createSlice({
     extraReducers:(builder)=>{
         builder.addCase(SetTodolistsAC, (state,action)=>{
             action.payload.td.forEach((tl:any)=>state[tl.id]=[])
-        });
-        builder.addCase(CreateTodolistsTC.fulfilled, (state,action)=>{
+        }).addCase(CreateTodolistsTC.fulfilled, (state,action)=>{
             state[action.payload.td.id]=[]
-        });
-        builder.addCase(DeleteTodolistsTC.fulfilled, (state,action)=>{
+        }).addCase(DeleteTodolistsTC.fulfilled, (state,action)=>{
             delete state[action.payload.id]
-        });
-        builder.addCase(SetTasksTC.fulfilled, (state, action)=> {
+        }).addCase(SetTasksTC.fulfilled, (state, action)=> {
             state[action.payload.todolistId]=action.payload.tasks
-        });
-        builder.addCase(DeleteTasksTC.fulfilled, (state, action)=> {
+        }).addCase(DeleteTasksTC.fulfilled, (state, action)=> {
 
             const tasks=state[action.payload.tdId]
             const index=tasks.findIndex((t)=>t.id===action.payload.id)
             if (index>-1){
                 tasks.splice(index, 1)}}
-        );
-        builder.addCase(AddTasksTC.fulfilled, (state, action)=> {
+        ).addCase(AddTasksTC.fulfilled, (state, action)=> {
             state[action.payload.task.todoListId].unshift(action.payload.task)
-        });
-        builder.addCase(UpdateTasksTC.fulfilled, (state, action)=> {
+        }).addCase(UpdateTasksTC.fulfilled, (state, action)=> {
             const tasks=state[action.payload.model.todoListId]
             const index=tasks.findIndex((t)=>t.id===action.payload.model.id)
             if (index>-1)
                 tasks[index].title=action.payload.model.title
-        });
-        builder.addCase(UpdateTasksStatusTC.fulfilled, (state, action)=> {
+        }).addCase(UpdateTasksStatusTC.fulfilled, (state, action)=> {
             const tasks=state[action.payload.model.todoListId]
             const index=tasks.findIndex((t)=>t.id===action.payload.model.id)
             if (index>-1)
                 tasks[index].status=action.payload.model.status
-        });
-        builder.addCase(logOutTC.fulfilled, (state, action)=> {
+        }).addCase(logOutTC.fulfilled, (state, action)=> {
             return {}
         });
     }

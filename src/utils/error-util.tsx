@@ -3,13 +3,13 @@ import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
 import Snackbar from '@mui/material/Snackbar';
 import {useDispatch, useSelector} from "react-redux";
-import {AppRootState} from "../app/store";
 import {appErrorAC} from "../app/app-reducer";
+import {errorSelector} from "../app/selectors";
 
 
 export function ErrorUtil() {
 
-    let open=useSelector<AppRootState,string|null>((state)=>state.app.error)
+    let open=useSelector(errorSelector)
     const dispatch=useDispatch()
     const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
         if (reason === 'clickaway') {

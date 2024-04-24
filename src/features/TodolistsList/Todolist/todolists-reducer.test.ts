@@ -1,5 +1,4 @@
 import {v1} from "uuid";
-import {TodoListTitleType} from "../../../app/App";
 import {
     ChangeFilterTdAC,
     SetTodolistsAC,

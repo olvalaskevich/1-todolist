@@ -1,16 +1,17 @@
 import {ActionCreatorsMapObject, bindActionCreators, combineReducers} from "redux";
-import {TasksActionType, todolistReducer} from "../features/TodolistsList/Todolist/todolists-reducer";
-import {tasksReducer, TasksReducerActionType} from "../features/TodolistsList/Todolist/tasks-reducer";
-import {ThunkAction, ThunkDispatch} from "redux-thunk";
-import {AppActionType, appReducer} from "./app-reducer";
-import {AuthActionsType, authReducer} from "../features/Auth/auth-reducer";
+import {todolistReducer} from "../features/TodolistsList/Todolist/todolists-reducer";
+import {tasksReducer} from "../features/TodolistsList/Todolist/tasks-reducer";
+import {appReducer} from "./app-reducer";
+import {authReducer} from "../features/Auth/auth-reducer";
 import {configureStore} from "@reduxjs/toolkit";
 import {useDispatch} from "react-redux";
 import {useMemo} from "react";
+import {AppDispatchType} from "./types";
 
-type AppActionCreatorsTypes= TasksReducerActionType | TasksActionType | AppActionType | AuthActionsType
-export type AppActionsTypes= ThunkAction<void, AppRootState, unknown, AppActionCreatorsTypes>
-export type AppDispatchType=ThunkDispatch<AppRootState, unknown, AppActionCreatorsTypes>
+// export type AppActionCreatorsTypes= TasksReducerActionType | TasksActionType | AppActionType | AuthActionsType
+// export type AppActionsTypes= ThunkAction<void, AppRootState, unknown, AppActionCreatorsTypes>
+// export type AppDispatchType=ThunkDispatch<AppRootState, unknown, AppActionCreatorsTypes>
+// export type AppRootState=ReturnType<typeof rootReducer>
 export const rootReducer=combineReducers({
     todolists:todolistReducer,
     tasks:tasksReducer,
@@ -18,7 +19,7 @@ export const rootReducer=combineReducers({
     auth:authReducer
 })
 
-export type AppRootState=ReturnType<typeof rootReducer>
+
 
 // export const store=createStore(rootReducer, applyMiddleware(thunk))
 

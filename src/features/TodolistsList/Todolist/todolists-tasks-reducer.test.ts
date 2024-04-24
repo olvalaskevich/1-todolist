@@ -1,6 +1,5 @@
 import {v1} from "uuid";
-import {TodolistTasksType, TodoListTitleType} from "../App";
-import {AddTdAC, RemoveTdAC, todolistReducer} from "./todolists-reducer";
+import {todolistReducer} from "./todolists-reducer";
 import {tasksReducer} from "./tasks-reducer";
 
 // test('todolist and task should be added', ()=>{

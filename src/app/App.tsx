@@ -6,35 +6,32 @@ import {
     Button,
     CircularProgress,
     Container,
-    Grid,
     IconButton,
     LinearProgress,
     Toolbar,
-    Typography
 } from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
 import {useSelector} from "react-redux";
 import {useActions} from "./store";
-import {TasksType} from "../api/todolistsAPI";
-import {statusType} from "./app-reducer";
+
 import {ErrorUtil} from "../utils/error-util";
 import {Todolists} from "../features/TodolistsList/Todolists";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import {AuthActions, AuthSelectors, Login} from "../features/Auth";
 import {AppSelectors} from "./index";
 
-export type FilterType='all' | 'active' | 'completed'
-export type TodoListTitleType = {
-    id: string,
-    title: string,
-    addedDate: string
-    order: number
-} & { filter: FilterType }
-    & { entityStatus: statusType }
-
-export type TodolistTasksType={
-    [key:string]:Array<TasksType>
-}
+// export type FilterType='all' | 'active' | 'completed'
+// export type TodoListTitleType = {
+//     id: string,
+//     title: string,
+//     addedDate: string
+//     order: number
+// } & { filter: FilterType }
+//     & { entityStatus: statusType }
+//
+// export type TodolistTasksType={
+//     [key:string]:Array<TasksType>
+// }
 
 
 
@@ -54,7 +51,7 @@ function App() {
         logOutTC()
     },[])
 
-    if (!isInitialised) return <CircularProgress color="primary"/>
+    if (!isInitialised) return <CircularProgress style={{position:'absolute', top:'50%', left:'50%'}} color="primary"/>
     else return (
 
         <BrowserRouter>
