@@ -1,5 +1,11 @@
 import {v1} from "uuid";
-import {AddTaskAC, RemoveTaskAC, tasksReducer, UpdateTasksStatusTC, UpdateTasksTC} from "./tasks-reducer";
+import {
+    AddTasksTC,
+    DeleteTasksTC,
+    tasksReducer,
+    UpdateTasksStatusTC,
+    UpdateTasksTC
+} from "./tasks-reducer";
 import {TodolistTasksType} from "../../../app/types";
 
 let todolistId1 = v1();
@@ -14,7 +20,7 @@ let tasks:TodolistTasksType = {
     [todolistId2]: [
         {id: '1', title: 'Book', addedDate:1, deadline:'', description:'', order:0, startDate:'', priority:1, status: 0, todoListId:'todolistId1'},
         {id: '2', title: 'Penсil', addedDate:1, deadline:'', description:'', order:0, startDate:'', priority:1, status: 0, todoListId:'todolistId1'}]
-}
+};
 let model={
     description: '',
     title: 'CSS',
@@ -25,50 +31,18 @@ let model={
     id: '1',
     todoListId: todolistId1,
     order: 0,
+    addedDate: 0};
+let task={
+    description: '',
+    title: 'Hello',
+    status: 0,
+    priority: 1,
+    startDate: '',
+    deadline: '',
+    id: '3',
+    todoListId: todolistId2,
+    order: 0,
     addedDate: 0}
-
-test ("Task should be removed", ()=> {
-
-    let result:TodolistTasksType=tasksReducer(tasks, RemoveTaskAC({tdId:todolistId1, id:'1'}))
-
-        expect(result[todolistId1].length).toBe(3)
-        expect(result[todolistId1][0].title).toBe('JS')
-
-}
-)
-
-test ("Task should be added", ()=> {
-
-        let result:TodolistTasksType=tasksReducer(tasks, AddTaskAC({task:{
-                description: '',
-                title: 'CSS',
-                status: 1,
-                priority: 1,
-                startDate: '',
-                deadline: '',
-                id: '1',
-                todoListId: todolistId1,
-                order: 0,
-                addedDate: 0}}))
-
-        expect(result[todolistId1].length).toBe(5)
-        expect(result[todolistId1][0].title).toBe('CSS')
-
-    }
-)
-
-test ("Should be changed checked (status of task)", ()=> {
-
-        let result:TodolistTasksType=tasksReducer(tasks, UpdateTasksStatusTC.fulfilled({model},'',{
-            idTd:model.todoListId,
-            idTask:model.id,
-            status:model.status}))
-
-        expect(result[todolistId1][0].status).toBe(1)
-        expect(result[todolistId1][1].status).toBe(0)
-
-    }
-)
 
 test ("Should be changed title of task", ()=> {
 
@@ -82,4 +56,39 @@ test ("Should be changed title of task", ()=> {
 
     }
 )
+test ("Should be changed checked (status of task)", ()=> {
+
+        let result:TodolistTasksType=tasksReducer(tasks, UpdateTasksStatusTC.fulfilled({model},'',{
+            idTd:model.todoListId,
+            idTask:model.id,
+            status:model.status}))
+
+        expect(result[todolistId1][0].status).toBe(1)
+        expect(result[todolistId1][1].status).toBe(0)
+
+    }
+)
+test ("Task should be added", ()=> {
+
+        let result:TodolistTasksType=tasksReducer(tasks, AddTasksTC.fulfilled({task}, '', {
+            idTd:task.todoListId,
+            title:task.title}))
+
+        expect(result[todolistId2].length).toBe(3)
+        expect(result[todolistId2][0].title).toBe('Hello')
+
+    }
+)
+test ("Task should be removed", ()=> {
+
+        let result:TodolistTasksType=tasksReducer(tasks, DeleteTasksTC.fulfilled({tdId: todolistId1,id:'4'},'',{
+            idTd:todolistId1,
+            idTask:'4'}))
+
+        expect(result[todolistId1].length).toBe(3)
+
+    }
+)
+
+
 
