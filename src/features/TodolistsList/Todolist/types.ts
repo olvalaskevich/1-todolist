@@ -1,13 +1,11 @@
 import {ChangeFilterTdAC, ChangeStatusTodolistAC} from "./todolists-reducer";
-import {AddTaskAC, RemoveTaskAC} from "./tasks-reducer";
 import {TasksType, TodolistType} from "../../../api/todolistsAPI";
 import {TodoListTitleType} from "../../../app/types";
 import {ChangeEvent} from "react";
 
 // tasks Reducer
 
-export type TasksReducerActionType=ReturnType<typeof RemoveTaskAC>|
-    ReturnType<typeof AddTaskAC>|
+export type TasksReducerActionType=
     SetTodolistsActionType
 
 // todolists Reducer
