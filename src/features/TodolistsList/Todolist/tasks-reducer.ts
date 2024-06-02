@@ -124,15 +124,15 @@ export const slice=createSlice({
     name:'tasks',
     initialState,
     reducers:{
-        RemoveTaskAC(state, action:PayloadAction<{tdId:string, id:string}>) {
-            const tasks=state[action.payload.tdId]
-            const index=tasks.findIndex((t)=>t.id===action.payload.id)
-            if (index>-1)
-                tasks.splice(index, 1)
-        },
-        AddTaskAC(state, action:PayloadAction<{task:TasksType}>) {
-            state[action.payload.task.todoListId].unshift(action.payload.task)
-        },
+        // RemoveTaskAC(state, action:PayloadAction<{tdId:string, id:string}>) {
+        //     const tasks=state[action.payload.tdId]
+        //     const index=tasks.findIndex((t)=>t.id===action.payload.id)
+        //     if (index>-1)
+        //         tasks.splice(index, 1)
+        // },
+        // AddTaskAC(state, action:PayloadAction<{task:TasksType}>) {
+        //     state[action.payload.task.todoListId].unshift(action.payload.task)
+        // },
         // ChangeCheckedAC(state, action:PayloadAction<{model:TasksType}>) {
         //     const tasks=state[action.payload.model.todoListId]
         //     const index=tasks.findIndex((t)=>t.id===action.payload.model.id)
@@ -162,7 +162,6 @@ export const slice=createSlice({
         }).addCase(SetTasksTC.fulfilled, (state, action)=> {
             state[action.payload.todolistId]=action.payload.tasks
         }).addCase(DeleteTasksTC.fulfilled, (state, action)=> {
-
             const tasks=state[action.payload.tdId]
             const index=tasks.findIndex((t)=>t.id===action.payload.id)
             if (index>-1){
@@ -185,7 +184,7 @@ export const slice=createSlice({
     }
 })
 export const tasksReducer=slice.reducer
-export const {RemoveTaskAC, AddTaskAC}=slice.actions
+
 // export const tasksReducer=(state:TodolistTasksType=initialState, action:any)=>{
 //     switch (action.type){
 //         case SetTodolistsAC.type:{
