@@ -1,4 +1,4 @@
-import {setIsAuthAC} from "./auth-reducer";
+
 
 //auth Reducer
 
@@ -7,7 +7,7 @@ export type DataAuthResponseType={
     email: string
     login: string
 }
-export type AuthActionsType=ReturnType<typeof setIsAuthAC>
+
 
 // Login
 

@@ -2,7 +2,6 @@ import {appErrorAC, appStatusAC, setIsInitialisedAC} from "./app-reducer";
 import {TasksType} from "../api/todolistsAPI";
 import {ThunkAction, ThunkDispatch} from "redux-thunk";
 import {rootReducer} from "./store";
-import {AuthActionsType} from "../features/Auth/types";
 import {TasksActionType, TasksReducerActionType} from "../features/TodolistsList/Todolist/types";
 
 export type statusType='idle'|'loading'|'success'
@@ -27,7 +26,7 @@ export type TodolistTasksType={
 
 //store
 
-export type AppActionCreatorsTypes= TasksReducerActionType | TasksActionType | AppActionType | AuthActionsType
+export type AppActionCreatorsTypes= TasksReducerActionType | TasksActionType | AppActionType
 export type AppActionsTypes= ThunkAction<void, AppRootState, unknown, AppActionCreatorsTypes>
 export type AppDispatchType=ThunkDispatch<AppRootState, unknown, AppActionCreatorsTypes>
 export type AppRootState=ReturnType<typeof rootReducer>
