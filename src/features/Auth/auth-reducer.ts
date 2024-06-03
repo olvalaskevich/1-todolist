@@ -70,10 +70,10 @@ const slice=createSlice({
     name:'auth',
     initialState:initialState,
     reducers:{
-        setIsAuthAC (state, action:PayloadAction<{isAuth:boolean}>){
-
-            state.isAuth=action.payload.isAuth
-        }
+        // setIsAuthAC (state, action:PayloadAction<{isAuth:boolean}>){
+        //
+        //     state.isAuth=action.payload.isAuth
+        // }
         // isAuthAC (state, action:PayloadAction<{isAuth:boolean}>){
         //     state.isAuth=action.payload.isAuth
         // }
@@ -89,7 +89,7 @@ const slice=createSlice({
     }
 })
 export const authReducer=slice.reducer
-export const setIsAuthAC=slice.actions.setIsAuthAC
+
 // export const isAuthAC=slice.actions.isAuthAC
 // export const authReducer=(state:AuthStateType=initialState, action:AuthActionsType)=>{
 //     switch (action.type) {
