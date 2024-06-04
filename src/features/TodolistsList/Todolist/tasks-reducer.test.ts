@@ -43,7 +43,6 @@ let task={
     todoListId: todolistId2,
     order: 0,
     addedDate: 0}
-
 test ("Should be changed title of task", ()=> {
 
         let result:TodolistTasksType=tasksReducer(tasks, UpdateTasksTC.fulfilled({model}, '',{
