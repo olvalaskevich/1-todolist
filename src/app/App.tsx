@@ -54,7 +54,7 @@ function App() {
     if (!isInitialised) return <CircularProgress style={{position:'absolute', top:'50%', left:'50%'}} color="primary"/>
     else return (
 
-        <BrowserRouter>
+        <BrowserRouter basename={process.env.PUBLIC_URL}>
             <div className="App" style={{height:'100vh', backgroundImage: `url("https://c.wallhere.com/photos/fb/27/1600x900_px_abstract-1526595.jpg!d")`, backgroundSize:'cover'}}>
                 <Box sx={{flexGrow: 1, flexWrap:'nowrap'}} >
                     <AppBar position="static" >
